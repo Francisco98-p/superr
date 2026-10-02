@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { normalizeQuery } from "@/lib/query";
 import { STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, Product, SearchResponse, StoreId } from "@/lib/types";
 
@@ -169,7 +170,7 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
   }, []);
 
   const runSearch = (raw: string) => {
-    const query = raw.trim();
+    const query = normalizeQuery(raw);
     if (query.length < 2) {
       setError("Escribí al menos 2 letras.");
       return;
@@ -182,7 +183,7 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
   };
 
   useEffect(() => {
-    if (hasInitialQuery) fetchResults(initialQuery.trim());
+    if (hasInitialQuery) fetchResults(normalizeQuery(initialQuery));
     return () => abortRef.current?.abort();
   }, [hasInitialQuery, initialQuery, fetchResults]);
 

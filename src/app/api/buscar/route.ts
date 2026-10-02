@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { normalizeQuery } from "@/lib/query";
 import { searchAll } from "@/lib/search";
 
 export const maxDuration = 20;
@@ -6,7 +7,7 @@ export const maxDuration = 20;
 export const preferredRegion = "gru1";
 
 export async function GET(request: NextRequest) {
-  const query = (request.nextUrl.searchParams.get("q") ?? "").trim().toLowerCase();
+  const query = normalizeQuery(request.nextUrl.searchParams.get("q") ?? "");
 
   if (query.length < 2 || query.length > 60) {
     return Response.json(
@@ -20,9 +21,9 @@ export async function GET(request: NextRequest) {
 
   return Response.json(data, {
     headers: {
-      // Cache each search 30 min on Vercel's CDN to avoid hammering the stores.
+      // Cache each search 1 h on Vercel's CDN (and serve stale up to a day) to avoid hammering the stores.
       "Cache-Control": anyOk
-        ? "public, s-maxage=1800, stale-while-revalidate=3600"
+        ? "public, s-maxage=3600, stale-while-revalidate=86400"
         : "no-store",
     },
   });
