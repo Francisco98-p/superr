@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
 import { STORE_IDS, STORES } from "@/lib/stores";
-import type { ComparisonGroup, Product, SearchResponse, StoreId } from "@/lib/types";
+import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
 
 const QUICK_SEARCHES = ["leche", "pan", "aceite", "yerba", "arroz", "fideos", "azúcar", "harina"];
 
@@ -72,10 +72,15 @@ function ProductImage({ src, alt, size }: { src: string | null; alt: string; siz
   );
 }
 
-function ComparisonCard({ group }: { group: ComparisonGroup }) {
+function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savingsPct?: number }) {
   const cheapest = group.offers[0];
   return (
-    <article className="flex flex-col rounded-xl border border-black/10 bg-white p-4 shadow-sm">
+    <article className="relative flex flex-col rounded-xl border border-black/10 bg-white p-4 shadow-sm">
+      {savingsPct !== undefined && (
+        <span className="absolute -top-2 right-3 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white shadow">
+          -{Math.round(savingsPct * 100)}%
+        </span>
+      )}
       <div className="flex gap-3">
         <ProductImage src={group.image} alt={group.name} size={72} />
         <div className="min-w-0">
@@ -146,6 +151,43 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
+async function requestOffers(): Promise<OffersResponse | null> {
+  try {
+    const res = await fetch("/api/ofertas");
+    return res.ok ? ((await res.json()) as OffersResponse) : null;
+  } catch {
+    return null;
+  }
+}
+
+function BestOffers({ offers }: { offers: OffersResponse | null | undefined }) {
+  return (
+    <section>
+      <h2 className="text-lg font-bold">Mejores ofertas de hoy</h2>
+      <p className="mb-3 text-sm text-neutral-500">
+        Productos de todos los días con la mayor diferencia de precio entre supermercados.
+      </p>
+      {offers === undefined && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="h-52 animate-pulse rounded-xl border border-black/5 bg-white" />
+          ))}
+        </div>
+      )}
+      {offers === null && (
+        <p className="text-sm text-neutral-500">No pudimos cargar las ofertas. Probá buscando un producto.</p>
+      )}
+      {offers && offers.offers.length > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {offers.offers.map((offer) => (
+            <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function PriceSearch({ initialQuery }: { initialQuery: string }) {
   const hasInitialQuery = initialQuery.trim().length >= 2;
   const [input, setInput] = useState(initialQuery);
@@ -155,6 +197,12 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
   const [hiddenStores, setHiddenStores] = useState<Set<StoreId>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>("price");
   const abortRef = useRef<AbortController | null>(null);
+  // undefined = loading, null = failed
+  const [offers, setOffers] = useState<OffersResponse | null | undefined>(undefined);
+
+  useEffect(() => {
+    requestOffers().then(setOffers);
+  }, []);
 
   const fetchResults = useCallback((query: string) => {
     abortRef.current?.abort();
@@ -250,15 +298,18 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
       )}
 
-      {!data && !loading && !error && (
-        <section className="rounded-xl border border-dashed border-black/15 bg-white/60 p-6 text-sm text-neutral-600">
-          <p className="font-medium text-neutral-800">¿Cómo funciona?</p>
-          <p className="mt-1">
-            Buscamos el producto en {STORE_IDS.map((id) => STORES[id].name).join(", ")} al mismo tiempo. Cuando
-            el mismo producto (mismo código de barras) está en varios supers, te mostramos lado a lado dónde
-            conviene comprarlo.
-          </p>
-        </section>
+      {!data && !loading && (
+        <>
+          <BestOffers offers={offers} />
+          <section className="rounded-xl border border-dashed border-black/15 bg-white/60 p-6 text-sm text-neutral-600">
+            <p className="font-medium text-neutral-800">¿Cómo funciona?</p>
+            <p className="mt-1">
+              Buscamos el producto en {STORE_IDS.map((id) => STORES[id].name).join(", ")} al mismo tiempo. Cuando
+              el mismo producto (mismo código de barras) está en varios supers, te mostramos lado a lado dónde
+              conviene comprarlo.
+            </p>
+          </section>
+        </>
       )}
 
       {loading && !data && (

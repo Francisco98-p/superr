@@ -37,6 +37,10 @@ export type ComparisonGroup = {
   savings: number;
 };
 
+export type Offer = ComparisonGroup & { savingsPct: number };
+
+export type OffersResponse = { fetchedAt: string; offers: Offer[] };
+
 export type SearchResponse = {
   query: string;
   fetchedAt: string;
