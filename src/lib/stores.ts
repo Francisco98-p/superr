@@ -15,6 +15,13 @@ export const STORES: Record<StoreId, Store> = {
     site: "https://www.masonline.com.ar",
     priceScope: "san-juan",
   },
+  laanonima: {
+    id: "laanonima",
+    name: "La Anónima",
+    color: "#0072bc",
+    site: "https://www.laanonima.com.ar",
+    priceScope: "san-juan",
+  },
   vea: {
     id: "vea",
     name: "Vea",

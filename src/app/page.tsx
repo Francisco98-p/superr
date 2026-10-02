@@ -22,8 +22,9 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <footer className="border-t border-black/10 bg-white">
         <div className="mx-auto max-w-6xl space-y-1 px-4 py-4 text-xs text-neutral-500">
           <p>
-            Precios obtenidos en tiempo real de las tiendas online. Carrefour y ChangoMás muestran el precio
-            para San Juan; Vea y Átomo muestran su precio online, que puede diferir del de la góndola.
+            Precios obtenidos en tiempo real de las tiendas online. Carrefour, ChangoMás y La Anónima muestran
+            el precio de su sucursal de San Juan; Vea y Átomo muestran su precio online, que puede diferir del
+            de la góndola.
           </p>
           <p>Sitio independiente, sin relación con los supermercados. Verificá el precio antes de comprar.</p>
         </div>

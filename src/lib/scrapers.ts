@@ -14,25 +14,33 @@ const HEADERS = {
   "Accept-Language": "es-AR,es;q=0.9",
 };
 
-async function getJson<T>(
+async function request(
   url: string,
   extraHeaders: Record<string, string> = {},
   retries = 1,
-): Promise<T> {
+): Promise<Response> {
   try {
     const res = await fetch(url, {
       headers: { ...HEADERS, ...extraHeaders },
       cache: "no-store",
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
-    if (res.status >= 500 && retries > 0) return getJson<T>(url, extraHeaders, retries - 1);
+    if (res.status >= 500 && retries > 0) return request(url, extraHeaders, retries - 1);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return (await res.json()) as T;
+    return res;
   } catch (err) {
     const isTimeout = err instanceof Error && err.name === "TimeoutError";
-    if (isTimeout && retries > 0) return getJson<T>(url, extraHeaders, retries - 1);
+    if (isTimeout && retries > 0) return request(url, extraHeaders, retries - 1);
     throw err;
   }
+}
+
+async function getJson<T>(url: string, extraHeaders: Record<string, string> = {}): Promise<T> {
+  return (await (await request(url, extraHeaders)).json()) as T;
+}
+
+async function getText(url: string, extraHeaders: Record<string, string> = {}): Promise<string> {
+  return (await request(url, extraHeaders)).text();
 }
 
 function withUnitPrice(p: Omit<Product, "unitPrice" | "unitLabel">): Product {
@@ -168,6 +176,91 @@ async function searchAtomo(query: string): Promise<Product[]> {
   return products;
 }
 
+// ---------- HTML (La Anónima) ----------
+
+// Branch 180 is the San Juan store (ex Hiper Libertad); prices are per branch.
+const LA_ANONIMA_COOKIE = "Id-Sucursal-Super=180; codigoPostal=5400; seleccionocp=1";
+const LA_ANONIMA_EAN_CACHE_MAX = 5000;
+const laAnonimaEanCache = new Map<string, string | null>();
+
+const HTML_ENTITIES: Record<string, string> = { amp: "&", quot: '"', apos: "'", lt: "<", gt: ">", nbsp: " " };
+
+function decodeHtml(text: string): string {
+  return text
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&([a-z]+);/gi, (match, name) => HTML_ENTITIES[name.toLowerCase()] ?? match)
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** "3.150" + "00" -> 3150 */
+function parseArPrice(integer: string, decimals?: string): number {
+  return Number(integer.replace(/\./g, "")) + (decimals ? Number(`0.${decimals}`) : 0);
+}
+
+/** The listing has no barcode, so it is read from each product page (and cached). */
+async function getLaAnonimaEan(productId: string, url: string): Promise<string | null> {
+  if (laAnonimaEanCache.has(productId)) return laAnonimaEanCache.get(productId) ?? null;
+  try {
+    const html = await getText(url, { Cookie: LA_ANONIMA_COOKIE });
+    const ean = html.match(/data-flix-ean="(\d{8,14})"/)?.[1] ?? null;
+    if (laAnonimaEanCache.size >= LA_ANONIMA_EAN_CACHE_MAX) laAnonimaEanCache.clear();
+    laAnonimaEanCache.set(productId, ean);
+    return ean;
+  } catch {
+    return null;
+  }
+}
+
+async function searchLaAnonima(query: string): Promise<Product[]> {
+  const { site } = STORES.laanonima;
+  const html = await getText(`${site}/buscar/${encodeURIComponent(query)}`, {
+    Accept: "text/html,application/xhtml+xml",
+    Cookie: LA_ANONIMA_COOKIE,
+  });
+
+  const parsed: { id: string; product: Omit<Product, "unitPrice" | "unitLabel"> }[] = [];
+  for (const block of html.split('<div id-codigo-producto="').slice(1)) {
+    if (parsed.length >= RESULTS_PER_STORE) break;
+
+    const id = block.match(/^(\d+)/)?.[1];
+    const path = block.match(/<a href="(\/[^"]*\/art_\d+\/)"/)?.[1];
+    const title = block.match(/<h2 class="titulo">([\s\S]*?)<\/h2>/)?.[1];
+    // "precio plus" is only paid with La Anónima's own card; everyone else pays the crossed-out price.
+    const priceMatch = block.match(
+      /<div class="precio(?: (\w+))?\s*">[\s\S]*?<span>\$ ([\d.]+)<span class="decimal">,(\d+)/,
+    );
+    if (!id || !path || !title || !priceMatch) continue;
+
+    const crossed = block.match(/<span class="tachado">\$ ([\d.]+)(?:<span class="decimal">,(\d+))?/);
+    const crossedPrice = crossed ? parseArPrice(crossed[1], crossed[2]) : null;
+    const listedPrice = parseArPrice(priceMatch[2], priceMatch[3]);
+    const isCardOnlyPrice = priceMatch[1] === "plus";
+
+    const price = isCardOnlyPrice && crossedPrice ? crossedPrice : listedPrice;
+    if (!price) continue;
+
+    parsed.push({
+      id,
+      product: {
+        store: "laanonima",
+        name: decodeHtml(title),
+        brand: null,
+        ean: null,
+        price,
+        regularPrice: !isCardOnlyPrice && crossedPrice && crossedPrice > price ? crossedPrice : null,
+        image: block.match(/<img data-src="([^"]+)"/)?.[1] ?? null,
+        url: `${site}${path}`,
+      },
+    });
+  }
+
+  const eans = await Promise.all(parsed.map(({ id, product }) => getLaAnonimaEan(id, product.url)));
+  return parsed.map(({ product }, i) => withUnitPrice({ ...product, ean: eans[i] }));
+}
+
 export function searchStore(store: StoreId, query: string): Promise<Product[]> {
-  return store === "atomo" ? searchAtomo(query) : searchVtex(store, query);
+  if (store === "atomo") return searchAtomo(query);
+  if (store === "laanonima") return searchLaAnonima(query);
+  return searchVtex(store, query);
 }

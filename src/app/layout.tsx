@@ -10,7 +10,7 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "Precios Super San Juan | Compará precios de supermercados",
   description:
-    "Compará precios de Carrefour, ChangoMás, Vea y Átomo en San Juan, Argentina. Encontrá dónde conviene comprar cada producto.",
+    "Compará precios de Carrefour, ChangoMás, La Anónima, Vea y Átomo en San Juan, Argentina. Encontrá dónde conviene comprar cada producto.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

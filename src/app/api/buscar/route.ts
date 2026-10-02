@@ -2,6 +2,8 @@ import type { NextRequest } from "next/server";
 import { searchAll } from "@/lib/search";
 
 export const maxDuration = 20;
+// São Paulo: closest Vercel region to the Argentine store servers.
+export const preferredRegion = "gru1";
 
 export async function GET(request: NextRequest) {
   const query = (request.nextUrl.searchParams.get("q") ?? "").trim().toLowerCase();

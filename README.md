@@ -6,18 +6,21 @@ agrupa el mismo producto por código de barras (EAN) y te muestra dónde convien
 
 ## Supermercados incluidos
 
-| Super     | Fuente                         | Precio                         |
-| --------- | ------------------------------ | ------------------------------ |
-| Carrefour | carrefour.com.ar (VTEX)        | Sucursal San Juan (CP 5400)    |
-| ChangoMás | masonline.com.ar (VTEX)        | Región San Juan (CP 5400)      |
-| Vea       | vea.com.ar (VTEX)              | Precio online nacional         |
-| Átomo     | atomoconviene.com (PrestaShop) | Precio de la tienda online     |
+| Super      | Fuente                         | Precio                                        |
+| ---------- | ------------------------------ | --------------------------------------------- |
+| Carrefour  | carrefour.com.ar (VTEX)        | Sucursal San Juan (CP 5400)                   |
+| ChangoMás  | masonline.com.ar (VTEX)        | Región San Juan (CP 5400)                     |
+| La Anónima | laanonima.com.ar (HTML)        | Sucursal San Juan, ex Hiper Libertad (id 180) |
+| Vea        | vea.com.ar (VTEX)              | Precio online nacional                        |
+| Átomo      | atomoconviene.com (PrestaShop) | Precio de la tienda online                    |
 
-No incluidos por ahora:
+No incluidos (no tienen tienda online con buscador o no están en San Juan):
 
-- **La Anónima** (ex Libertad): su sitio bloquea las consultas automáticas (HTTP 403).
-- **Jumbo / Disco**: no tienen sucursales en San Juan.
-- **Coto / Diarco**: no tienen una API pública compatible.
+- **Makro** y **Yaguar** (mayoristas): solo publican catálogos/folletos, sin buscador de precios.
+- **Jumbo / Disco / Coto / Diarco**: no tienen sucursales en San Juan.
+
+En La Anónima se muestra el precio que paga cualquier cliente; el "precio PLUS" (solo con la
+tarjeta de La Anónima) no se usa.
 
 ## Cómo funciona
 
