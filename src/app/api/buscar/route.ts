@@ -3,8 +3,6 @@ import { normalizeQuery } from "@/lib/query";
 import { searchAll } from "@/lib/search";
 
 export const maxDuration = 20;
-// São Paulo: closest Vercel region to the Argentine store servers.
-export const preferredRegion = "gru1";
 
 export async function GET(request: NextRequest) {
   const query = normalizeQuery(request.nextUrl.searchParams.get("q") ?? "");

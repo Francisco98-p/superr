@@ -1,10 +1,15 @@
 import Link from "next/link";
 import PriceSearch from "@/components/PriceSearch";
 import VisitorCounter from "@/components/VisitorCounter";
+import { getCachedOffers } from "@/lib/offers";
+
+export const maxDuration = 60;
 
 export default async function Home({ searchParams }: PageProps<"/">) {
   const { q } = await searchParams;
   const initialQuery = typeof q === "string" ? q : "";
+  // Not awaited: the page streams right away and the offers fill in when ready.
+  const offers = getCachedOffers();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -23,7 +28,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       </header>
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
-        <PriceSearch key={initialQuery} initialQuery={initialQuery} />
+        <PriceSearch key={initialQuery} initialQuery={initialQuery} offers={offers} />
       </main>
 
       <footer className="border-t border-black/10 bg-white">

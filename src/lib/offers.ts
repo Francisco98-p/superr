@@ -1,5 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { searchAll } from "./search";
-import type { Offer } from "./types";
+import type { Offer, OffersResponse } from "./types";
 
 const OFFER_QUERIES = [
   "leche",
@@ -52,4 +53,28 @@ export async function getBestOffers(): Promise<Offer[]> {
     if (offers.length >= MAX_OFFERS) break;
   }
   return offers;
+}
+
+const OFFERS_REVALIDATE_S = 6 * 60 * 60;
+
+// Shared by every visitor and kept across deploys; after 6 h the stale copy is
+// still served while a fresh one is computed in the background.
+const cachedOffers = unstable_cache(
+  async (): Promise<OffersResponse> => {
+    const offers = await getBestOffers();
+    // Throwing keeps an empty result (stores down) out of the cache.
+    if (offers.length === 0) throw new Error("No offers found");
+    return { fetchedAt: new Date().toISOString(), offers };
+  },
+  ["best-offers-v1"],
+  { revalidate: OFFERS_REVALIDATE_S },
+);
+
+/** Cached best offers, or null when they can't be computed right now. */
+export async function getCachedOffers(): Promise<OffersResponse | null> {
+  try {
+    return await cachedOffers();
+  } catch {
+    return null;
+  }
 }

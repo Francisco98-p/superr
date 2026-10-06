@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
 import { STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
@@ -151,44 +151,114 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-async function requestOffers(): Promise<OffersResponse | null> {
-  try {
-    const res = await fetch("/api/ofertas");
-    return res.ok ? ((await res.json()) as OffersResponse) : null;
-  } catch {
-    return null;
-  }
+const updatedAt = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/San_Juan",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+function OfferCardSkeleton() {
+  return (
+    <div className="rounded-xl border border-black/10 bg-white p-4 shadow-sm">
+      <div className="flex gap-3">
+        <div className="size-[72px] shrink-0 animate-pulse rounded bg-neutral-100" />
+        <div className="flex-1 space-y-2 pt-1">
+          <div className="h-3 animate-pulse rounded bg-neutral-100" />
+          <div className="h-3 w-4/5 animate-pulse rounded bg-neutral-100" />
+          <div className="h-3 w-3/5 animate-pulse rounded bg-emerald-50" />
+        </div>
+      </div>
+      <div className="mt-3 space-y-1.5">
+        {Array.from({ length: 3 }, (_, i) => (
+          <div key={i} className="h-8 animate-pulse rounded-lg bg-neutral-50" />
+        ))}
+      </div>
+    </div>
+  );
 }
 
-function BestOffers({ offers }: { offers: OffersResponse | null | undefined }) {
+function OffersHeader({ fetchedAt }: { fetchedAt?: string }) {
+  return (
+    <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+      <div>
+        <h2 className="text-lg font-bold">Mejores ofertas de hoy</h2>
+        <p className="text-sm text-neutral-500">
+          Productos de todos los días con la mayor diferencia de precio entre supermercados.
+        </p>
+      </div>
+      {fetchedAt && (
+        <p className="text-xs text-neutral-400" suppressHydrationWarning>
+          Precios actualizados a las {updatedAt.format(new Date(fetchedAt))} h
+        </p>
+      )}
+    </div>
+  );
+}
+
+function BestOffersLoading() {
   return (
     <section>
-      <h2 className="text-lg font-bold">Mejores ofertas de hoy</h2>
-      <p className="mb-3 text-sm text-neutral-500">
-        Productos de todos los días con la mayor diferencia de precio entre supermercados.
+      <OffersHeader />
+      <p className="mb-3 flex items-center gap-2 text-sm text-emerald-800">
+        <span className="size-2 animate-ping rounded-full bg-emerald-600" />
+        Comparando precios en {STORE_IDS.length} supermercados...
       </p>
-      {offers === undefined && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="h-52 animate-pulse rounded-xl border border-black/5 bg-white" />
-          ))}
-        </div>
-      )}
-      {offers === null && (
-        <p className="text-sm text-neutral-500">No pudimos cargar las ofertas. Probá buscando un producto.</p>
-      )}
-      {offers && offers.offers.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {offers.offers.map((offer) => (
-            <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }, (_, i) => (
+          <OfferCardSkeleton key={i} />
+        ))}
+      </div>
     </section>
   );
 }
 
-export default function PriceSearch({ initialQuery }: { initialQuery: string }) {
+function BestOffers({ offers, onSearch }: { offers: Promise<OffersResponse | null>; onSearch: (q: string) => void }) {
+  const result = use(offers);
+
+  if (!result || result.offers.length === 0) {
+    return (
+      <section>
+        <OffersHeader />
+        <div className="rounded-xl border border-black/10 bg-white p-4 text-sm text-neutral-600 shadow-sm">
+          <p>Los supermercados están tardando en responder y no pudimos armar las ofertas ahora.</p>
+          <p className="mt-1">Mientras tanto, compará un producto:</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {QUICK_SEARCHES.slice(0, 4).map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => onSearch(term)}
+                className="rounded-full bg-emerald-700 px-3 py-1 text-sm font-medium text-white transition hover:bg-emerald-800"
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section>
+      <OffersHeader fetchedAt={result.fetchedAt} />
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {result.offers.map((offer) => (
+          <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function PriceSearch({
+  initialQuery,
+  offers,
+}: {
+  initialQuery: string;
+  offers: Promise<OffersResponse | null>;
+}) {
   const hasInitialQuery = initialQuery.trim().length >= 2;
   const [input, setInput] = useState(initialQuery);
   const [data, setData] = useState<SearchResponse | null>(null);
@@ -197,12 +267,6 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
   const [hiddenStores, setHiddenStores] = useState<Set<StoreId>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>("price");
   const abortRef = useRef<AbortController | null>(null);
-  // undefined = loading, null = failed
-  const [offers, setOffers] = useState<OffersResponse | null | undefined>(undefined);
-
-  useEffect(() => {
-    requestOffers().then(setOffers);
-  }, []);
 
   const fetchResults = useCallback((query: string) => {
     abortRef.current?.abort();
@@ -300,7 +364,9 @@ export default function PriceSearch({ initialQuery }: { initialQuery: string }) 
 
       {!data && !loading && (
         <>
-          <BestOffers offers={offers} />
+          <Suspense fallback={<BestOffersLoading />}>
+            <BestOffers offers={offers} onSearch={runSearch} />
+          </Suspense>
           <section className="rounded-xl border border-dashed border-black/15 bg-white/60 p-6 text-sm text-neutral-600">
             <p className="font-medium text-neutral-800">¿Cómo funciona?</p>
             <p className="mt-1">
