@@ -66,7 +66,7 @@ const cachedOffers = unstable_cache(
     if (offers.length === 0) throw new Error("No offers found");
     return { fetchedAt: new Date().toISOString(), offers };
   },
-  ["best-offers-v1"],
+  ["best-offers-v2"],
   { revalidate: OFFERS_REVALIDATE_S },
 );
 

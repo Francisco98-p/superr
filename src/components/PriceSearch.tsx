@@ -47,7 +47,19 @@ function StoreBadge({ store }: { store: StoreId }) {
   );
 }
 
-function ProductImage({ src, alt, size }: { src: string | null; alt: string; size: number }) {
+/** Tries each candidate photo in order and falls back to a placeholder when all fail. */
+function ProductImage({ srcs, alt, size }: { srcs: (string | null)[]; alt: string; size: number }) {
+  const candidates = [...new Set(srcs.filter((s): s is string => !!s))];
+  const [failed, setFailed] = useState(0);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const src = candidates[failed] ?? null;
+
+  // A server-rendered <img> can fail before hydration, when onError isn't attached yet.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth === 0) setFailed((n) => n + 1);
+  }, [src]);
+
   if (!src) {
     return (
       <div
@@ -61,8 +73,11 @@ function ProductImage({ src, alt, size }: { src: string | null; alt: string; siz
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      ref={imgRef}
+      key={src}
       src={src}
       alt={alt}
+      onError={() => setFailed((n) => n + 1)}
       width={size}
       height={size}
       loading="lazy"
@@ -82,7 +97,7 @@ function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savings
         </span>
       )}
       <div className="flex gap-3">
-        <ProductImage src={group.image} alt={group.name} size={72} />
+        <ProductImage srcs={[group.image, ...group.offers.map((o) => o.image)]} alt={group.name} size={72} />
         <div className="min-w-0">
           <h3 className="line-clamp-3 text-sm font-semibold leading-snug">{group.name}</h3>
           {group.savings > 0 && (
@@ -129,7 +144,7 @@ function ProductCard({ product }: { product: Product }) {
       rel="noopener noreferrer"
       className="flex gap-3 rounded-xl border border-black/10 bg-white p-3 shadow-sm transition hover:border-emerald-400"
     >
-      <ProductImage src={product.image} alt={product.name} size={64} />
+      <ProductImage srcs={[product.image]} alt={product.name} size={64} />
       <div className="flex min-w-0 flex-1 flex-col">
         <StoreBadge store={product.store} />
         <h3 className="mt-1 line-clamp-2 text-sm leading-snug">{product.name}</h3>

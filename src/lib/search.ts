@@ -8,6 +8,12 @@ function normalizeEan(ean: string | null): string | null {
   return digits.length >= 7 ? digits : null;
 }
 
+// La Anónima's image CDN often blocks hotlinked requests, so use its photos last.
+function pickImage(offers: Product[]): string | null {
+  const withImage = offers.filter((o) => o.image);
+  return (withImage.find((o) => o.store !== "laanonima") ?? withImage[0])?.image ?? null;
+}
+
 function buildComparisons(products: Product[]): ComparisonGroup[] {
   const byEan = new Map<string, Product[]>();
   for (const p of products) {
@@ -29,7 +35,7 @@ function buildComparisons(products: Product[]): ComparisonGroup[] {
     groups.push({
       ean,
       name: offers.reduce((a, b) => (b.name.length > a.name.length ? b : a)).name,
-      image: offers.find((o) => o.image)?.image ?? null,
+      image: pickImage(offers),
       offers,
       cheapest: offers[0].store,
       savings: Math.max(...prices) - Math.min(...prices),
