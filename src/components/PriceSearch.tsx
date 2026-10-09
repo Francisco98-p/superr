@@ -22,17 +22,55 @@ function formatPrice(value: number) {
 
 type SearchOutcome = { data: SearchResponse | null; error: string | null };
 
+const CLIENT_CACHE_MS = 10 * 60 * 1000;
+const CLIENT_TIMEOUT_MS = 25000;
+// Repeating a search (quick buttons, going back) doesn't spend mobile data again.
+const searchCache = new Map<string, { data: SearchResponse; at: number }>();
+
 /** Resolves to null when the request was aborted by a newer search. */
 async function requestSearch(query: string, signal: AbortSignal): Promise<SearchOutcome | null> {
+  const hit = searchCache.get(query);
+  if (hit && Date.now() - hit.at < CLIENT_CACHE_MS) return { data: hit.data, error: null };
+
+  let timedOut = false;
+  const controller = new AbortController();
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, CLIENT_TIMEOUT_MS);
+  signal.addEventListener("abort", () => controller.abort());
   try {
-    const res = await fetch(`/api/buscar?q=${encodeURIComponent(query)}`, { signal });
-    const body = await res.json();
-    if (!res.ok) return { data: null, error: body.error ?? "No se pudo buscar." };
-    return { data: body as SearchResponse, error: null };
-  } catch (err) {
-    if (err instanceof DOMException && err.name === "AbortError") return null;
-    return { data: null, error: "No se pudo conectar. Probá de nuevo." };
+    const res = await fetch(`/api/buscar?q=${encodeURIComponent(query)}`, { signal: controller.signal });
+    const body = await res.json().catch(() => null);
+    if (!res.ok || !body) return { data: null, error: body?.error ?? "Los supermercados no respondieron. Probá de nuevo en un rato." };
+    const data = body as SearchResponse;
+    if (data.stores.some((s) => s.ok)) searchCache.set(query, { data, at: Date.now() });
+    return { data, error: null };
+  } catch {
+    if (timedOut) return { data: null, error: "Los supermercados están tardando demasiado. Probá de nuevo en un rato." };
+    if (signal.aborted) return null;
+    return { data: null, error: "No se pudo conectar. Revisá tu conexión y probá de nuevo." };
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+const dateTime = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/San_Juan",
+  day: "numeric",
+  month: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** "9/10, 13:20 h" in San Juan time. */
+function formatWhen(iso: string) {
+  return `${dateTime.format(new Date(iso))} h`;
+}
+
+function oldest(isos: string[]) {
+  return isos.reduce((a, b) => (b < a ? b : a));
 }
 
 function StoreBadge({ store }: { store: StoreId }) {
@@ -87,13 +125,21 @@ function ProductImage({ srcs, alt, size }: { srcs: (string | null)[]; alt: strin
   );
 }
 
-function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savingsPct?: number }) {
+function ComparisonCard({
+  group,
+  savingsPct,
+  verify = false,
+}: {
+  group: ComparisonGroup;
+  savingsPct?: number;
+  verify?: boolean;
+}) {
   const cheapest = group.offers[0];
   return (
     <article className="relative flex flex-col rounded-xl border border-black/10 bg-white p-4 shadow-sm">
       {savingsPct !== undefined && (
         <span className="absolute -top-2 right-3 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white shadow">
-          -{Math.round(savingsPct * 100)}%
+          Hasta {Math.round(savingsPct * 100)}% más barato
         </span>
       )}
       <div className="flex gap-3">
@@ -103,6 +149,11 @@ function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savings
           {group.savings > 0 && (
             <p className="mt-1 text-xs font-medium text-emerald-700">
               Ahorrás hasta {formatPrice(group.savings)} comprando en {STORES[cheapest.store].name}
+            </p>
+          )}
+          {verify && (
+            <p className="mt-1 inline-block rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-semibold text-amber-900">
+              Diferencia muy grande: verificá en el súper
             </p>
           )}
         </div>
@@ -120,9 +171,12 @@ function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savings
                   isCheapest ? "bg-emerald-50 ring-1 ring-emerald-300" : "bg-neutral-50"
                 }`}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex flex-wrap items-center gap-x-2">
                   <StoreBadge store={offer.store} />
                   {isCheapest && <span className="text-[11px] font-semibold text-emerald-700">Más barato</span>}
+                  {STORES[offer.store].priceScope === "online" && (
+                    <span className="text-[11px] text-neutral-500">precio online</span>
+                  )}
                 </span>
                 <span className={`font-semibold tabular-nums ${isCheapest ? "text-emerald-700" : ""}`}>
                   {formatPrice(offer.price)}
@@ -132,6 +186,9 @@ function ComparisonCard({ group, savingsPct }: { group: ComparisonGroup; savings
           );
         })}
       </ul>
+      <p className="mt-2 text-[11px] text-neutral-400" suppressHydrationWarning>
+        Precios del {formatWhen(oldest(group.offers.map((o) => o.fetchedAt)))}
+      </p>
     </article>
   );
 }
@@ -161,17 +218,15 @@ function ProductCard({ product }: { product: Product }) {
             </span>
           )}
         </div>
+        <span className="text-[11px] text-neutral-400" suppressHydrationWarning>
+          {STORES[product.store].priceScope === "online" ? "Precio online · " : ""}
+          {formatWhen(product.fetchedAt)}
+        </span>
       </div>
     </a>
   );
 }
 
-const updatedAt = new Intl.DateTimeFormat("es-AR", {
-  timeZone: "America/Argentina/San_Juan",
-  hour: "2-digit",
-  minute: "2-digit",
-  hourCycle: "h23",
-});
 
 function OfferCardSkeleton() {
   return (
@@ -203,8 +258,8 @@ function OffersHeader({ fetchedAt }: { fetchedAt?: string }) {
         </p>
       </div>
       {fetchedAt && (
-        <p className="text-xs text-neutral-400" suppressHydrationWarning>
-          Precios actualizados a las {updatedAt.format(new Date(fetchedAt))} h
+        <p className="text-xs text-neutral-500" suppressHydrationWarning>
+          Precios actualizados el {formatWhen(fetchedAt)}
         </p>
       )}
     </div>
@@ -260,10 +315,19 @@ function BestOffers({ offers, onSearch }: { offers: Promise<OffersResponse | nul
       <OffersHeader fetchedAt={result.fetchedAt} />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {result.offers.map((offer) => (
-          <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} />
+          <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} verify={offer.verify} />
         ))}
       </div>
     </section>
+  );
+}
+
+function OnlinePriceNotice() {
+  return (
+    <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
+      <strong>Ojo:</strong> Vea y Átomo muestran su <strong>precio online</strong>, que puede ser distinto del de la
+      góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan.
+    </p>
   );
 }
 
@@ -373,8 +437,17 @@ export default function PriceSearch({
         </div>
       </section>
 
+      <OnlinePriceNotice />
+
       {error && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p>{error}</p>
+          {input.trim().length >= 2 && (
+            <button type="button" onClick={() => runSearch(input)} className="mt-1 font-semibold underline">
+              Reintentar
+            </button>
+          )}
+        </div>
       )}
 
       {!data && !loading && (
@@ -382,14 +455,6 @@ export default function PriceSearch({
           <Suspense fallback={<BestOffersLoading />}>
             <BestOffers offers={offers} onSearch={runSearch} />
           </Suspense>
-          <section className="rounded-xl border border-dashed border-black/15 bg-white/60 p-6 text-sm text-neutral-600">
-            <p className="font-medium text-neutral-800">¿Cómo funciona?</p>
-            <p className="mt-1">
-              Buscamos el producto en {STORE_IDS.map((id) => STORES[id].name).join(", ")} al mismo tiempo. Cuando
-              el mismo producto (mismo código de barras) está en varios supers, te mostramos lado a lado dónde
-              conviene comprarlo.
-            </p>
-          </section>
         </>
       )}
 
@@ -413,11 +478,22 @@ export default function PriceSearch({
             ))}
           </section>
 
+          {data.stores.some((s) => !s.ok) && (
+            <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
+              {data.stores.every((s) => !s.ok)
+                ? "Ningún supermercado respondió ahora. Probá de nuevo en unos minutos."
+                : `No pudimos consultar ${data.stores
+                    .filter((s) => !s.ok)
+                    .map((s) => STORES[s.store].name)
+                    .join(", ")} en este momento. Te mostramos lo que respondieron los demás.`}
+            </p>
+          )}
+
           {data.comparisons.length > 0 && (
             <section>
               <h2 className="text-lg font-bold">Comparación directa</h2>
               <p className="mb-3 text-sm text-neutral-500">
-                Mismo producto en distintos supermercados, ordenado por mayor ahorro.
+                Mismo producto y misma presentación en distintos supermercados, ordenado por mayor ahorro.
               </p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {data.comparisons.slice(0, 12).map((group) => (

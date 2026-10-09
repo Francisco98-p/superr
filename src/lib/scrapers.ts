@@ -7,6 +7,15 @@ const REQUEST_TIMEOUT_MS = 8000;
 const RESULTS_PER_STORE = 24;
 const REGION_TTL_MS = 6 * 60 * 60 * 1000;
 
+type ScrapedProduct = Omit<Product, "fetchedAt">;
+
+// Cards show photos at 64-72 px; VTEX can resize on its CDN, so ask for 160 px instead of the original.
+const VTEX_THUMB_PX = 160;
+function vtexThumb(url: string | undefined): string | null {
+  if (!url) return null;
+  return url.replace(/\/arquivos\/ids\/(\d+)(?:-\d+-\d+)?\//, `/arquivos/ids/$1-${VTEX_THUMB_PX}-${VTEX_THUMB_PX}/`);
+}
+
 const HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
@@ -43,7 +52,7 @@ async function getText(url: string, extraHeaders: Record<string, string> = {}): 
   return (await request(url, extraHeaders)).text();
 }
 
-function withUnitPrice(p: Omit<Product, "unitPrice" | "unitLabel">): Product {
+function withUnitPrice(p: Omit<ScrapedProduct, "unitPrice" | "unitLabel">): ScrapedProduct {
   const unit = unitPriceFromName(p.name, p.price);
   return { ...p, unitPrice: unit?.unitPrice ?? null, unitLabel: unit?.unitLabel ?? null };
 }
@@ -88,7 +97,7 @@ async function getSanJuanRegion(site: string): Promise<string | null> {
   return id;
 }
 
-async function searchVtex(store: StoreId, query: string): Promise<Product[]> {
+async function searchVtex(store: StoreId, query: string): Promise<ScrapedProduct[]> {
   const { site, priceScope } = STORES[store];
   const params = new URLSearchParams({
     query,
@@ -107,7 +116,7 @@ async function searchVtex(store: StoreId, query: string): Promise<Product[]> {
     `${site}/api/io/_v/api/intelligent-search/product_search/?${params}`,
   );
 
-  const products: Product[] = [];
+  const products: ScrapedProduct[] = [];
   for (const p of data.products ?? []) {
     const item = p.items?.[0];
     const offer = item?.sellers?.[0]?.commertialOffer;
@@ -124,7 +133,7 @@ async function searchVtex(store: StoreId, query: string): Promise<Product[]> {
         ean: item.ean || null,
         price: offer.Price,
         regularPrice: regular && regular > offer.Price ? regular : null,
-        image: item.images?.[0]?.imageUrl ?? null,
+        image: vtexThumb(item.images?.[0]?.imageUrl),
         url: `${site}${path}`,
       }),
     );
@@ -142,7 +151,7 @@ type PrestaProduct = {
   cover?: { medium?: { url: string } } | null;
 };
 
-async function searchAtomo(query: string): Promise<Product[]> {
+async function searchAtomo(query: string): Promise<ScrapedProduct[]> {
   const { site } = STORES.atomo;
   const params = new URLSearchParams({
     controller: "search",
@@ -154,7 +163,7 @@ async function searchAtomo(query: string): Promise<Product[]> {
     "X-Requested-With": "XMLHttpRequest",
   });
 
-  const products: Product[] = [];
+  const products: ScrapedProduct[] = [];
   for (const p of data.products ?? []) {
     if (!p.price_amount) continue;
     const ean = p.url.match(/-(\d{8,14})\.html$/)?.[1] ?? null;
@@ -212,14 +221,14 @@ async function getLaAnonimaEan(productId: string, url: string): Promise<string |
   }
 }
 
-async function searchLaAnonima(query: string): Promise<Product[]> {
+async function searchLaAnonima(query: string): Promise<ScrapedProduct[]> {
   const { site } = STORES.laanonima;
   const html = await getText(`${site}/buscar/${encodeURIComponent(query)}`, {
     Accept: "text/html,application/xhtml+xml",
     Cookie: LA_ANONIMA_COOKIE,
   });
 
-  const parsed: { id: string; product: Omit<Product, "unitPrice" | "unitLabel"> }[] = [];
+  const parsed: { id: string; product: Omit<ScrapedProduct, "unitPrice" | "unitLabel"> }[] = [];
   for (const block of html.split('<div id-codigo-producto="').slice(1)) {
     if (parsed.length >= RESULTS_PER_STORE) break;
 
@@ -259,7 +268,7 @@ async function searchLaAnonima(query: string): Promise<Product[]> {
   return parsed.map(({ product }, i) => withUnitPrice({ ...product, ean: eans[i] }));
 }
 
-export function searchStore(store: StoreId, query: string): Promise<Product[]> {
+export function searchStore(store: StoreId, query: string): Promise<ScrapedProduct[]> {
   if (store === "atomo") return searchAtomo(query);
   if (store === "laanonima") return searchLaAnonima(query);
   return searchVtex(store, query);

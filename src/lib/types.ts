@@ -19,6 +19,8 @@ export type Product = {
   unitLabel: "kg" | "L" | null;
   image: string | null;
   url: string;
+  /** When this store answered (ISO). */
+  fetchedAt: string;
 };
 
 export type StoreResult = {
@@ -37,14 +39,28 @@ export type ComparisonGroup = {
   savings: number;
 };
 
-export type Offer = ComparisonGroup & { savingsPct: number };
+/** Listings that share a barcode but are not the same presentation, left out of the comparison. */
+export type DiscardedGroup = {
+  ean: string;
+  kept: { store: StoreId; name: string }[];
+  dropped: { store: StoreId; name: string; price: number; reason: string }[];
+};
 
-export type OffersResponse = { fetchedAt: string; offers: Offer[] };
+export type Offer = ComparisonGroup & {
+  savingsPct: number;
+  /** Gap big enough that the price should be checked at the store. */
+  verify: boolean;
+};
+
+export type ExcludedOffer = { ean: string; name: string; savingsPct: number; reason: string; offers: { store: StoreId; name: string; price: number }[] };
+
+export type OffersResponse = { fetchedAt: string; offers: Offer[]; excluded?: ExcludedOffer[] };
 
 export type SearchResponse = {
   query: string;
   fetchedAt: string;
   stores: StoreResult[];
   comparisons: ComparisonGroup[];
+  discarded: DiscardedGroup[];
   products: Product[];
 };

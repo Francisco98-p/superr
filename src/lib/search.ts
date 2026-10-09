@@ -1,6 +1,10 @@
+import { parsePresentation, presentationMismatch, type Presentation } from "./presentation";
 import { searchStore } from "./scrapers";
 import { STORE_IDS } from "./stores";
-import type { ComparisonGroup, Product, SearchResponse, StoreResult } from "./types";
+import type { ComparisonGroup, DiscardedGroup, Product, SearchResponse, StoreResult } from "./types";
+
+// A store that takes longer than this is reported as not answering, so the rest still show up.
+const STORE_DEADLINE_MS = 14000;
 
 function normalizeEan(ean: string | null): string | null {
   if (!ean) return null;
@@ -14,23 +18,70 @@ function pickImage(offers: Product[]): string | null {
   return (withImage.find((o) => o.store !== "laanonima") ?? withImage[0])?.image ?? null;
 }
 
-function buildComparisons(products: Product[]): ComparisonGroup[] {
-  const byEan = new Map<string, Product[]>();
-  for (const p of products) {
-    const ean = normalizeEan(p.ean);
+type Listing = { product: Product; presentation: Presentation };
+
+/**
+ * Largest set of listings that are mutually the same presentation, preferring more stores.
+ * The same barcode is sometimes reused for another size or pack, so the barcode alone is not enough.
+ */
+function samePresentation(listings: Listing[]): { kept: Listing[]; dropped: { listing: Listing; reason: string }[] } {
+  let best: Listing[] = [];
+  for (const seed of listings) {
+    const cluster = [seed];
+    for (const other of listings) {
+      if (other === seed) continue;
+      if (cluster.every((c) => !presentationMismatch(c.presentation, other.presentation))) cluster.push(other);
+    }
+    const stores = (l: Listing[]) => new Set(l.map((x) => x.product.store)).size;
+    if (stores(cluster) > stores(best) || (stores(cluster) === stores(best) && cluster.length > best.length)) best = cluster;
+  }
+  const dropped = listings
+    .filter((l) => !best.includes(l))
+    .map((listing) => ({
+      listing,
+      reason: best.map((b) => presentationMismatch(b.presentation, listing.presentation)).find(Boolean) ?? "Presentación distinta",
+    }));
+  return { kept: best, dropped };
+}
+
+function buildComparisons(products: Product[]): { comparisons: ComparisonGroup[]; discarded: DiscardedGroup[] } {
+  const byEan = new Map<string, Listing[]>();
+  for (const product of products) {
+    const ean = normalizeEan(product.ean);
     if (!ean) continue;
     const list = byEan.get(ean) ?? [];
-    // Keep only the cheapest offer per store for each barcode.
-    const existing = list.findIndex((o) => o.store === p.store);
-    if (existing === -1) list.push(p);
-    else if (p.price < list[existing].price) list[existing] = p;
+    list.push({ product, presentation: parsePresentation(product.name) });
     byEan.set(ean, list);
   }
 
   const groups: ComparisonGroup[] = [];
-  for (const [ean, offers] of byEan) {
+  const discarded: DiscardedGroup[] = [];
+  for (const [ean, listings] of byEan) {
+    if (new Set(listings.map((l) => l.product.store)).size < 2) continue;
+    const { kept, dropped } = samePresentation(listings);
+
+    // Keep only the cheapest offer per store for each barcode.
+    const perStore = new Map<string, Product>();
+    for (const { product } of kept) {
+      const prev = perStore.get(product.store);
+      if (!prev || product.price < prev.price) perStore.set(product.store, product);
+    }
+    const offers = [...perStore.values()].sort((a, b) => a.price - b.price);
+
+    if (dropped.length) {
+      discarded.push({
+        ean,
+        kept: offers.map((o) => ({ store: o.store, name: o.name })),
+        dropped: dropped.map(({ listing, reason }) => ({
+          store: listing.product.store,
+          name: listing.product.name,
+          price: listing.product.price,
+          reason,
+        })),
+      });
+    }
     if (offers.length < 2) continue;
-    offers.sort((a, b) => a.price - b.price);
+
     const prices = offers.map((o) => o.price);
     groups.push({
       ean,
@@ -42,13 +93,30 @@ function buildComparisons(products: Product[]): ComparisonGroup[] {
     });
   }
 
-  return groups.sort(
-    (a, b) => b.offers.length - a.offers.length || b.savings - a.savings,
-  );
+  return {
+    comparisons: groups.sort((a, b) => b.offers.length - a.offers.length || b.savings - a.savings),
+    discarded,
+  };
+}
+
+function withDeadline<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("Tardó demasiado en responder")), ms);
+    promise.then(
+      (v) => { clearTimeout(timer); resolve(v); },
+      (e) => { clearTimeout(timer); reject(e); },
+    );
+  });
 }
 
 export async function searchAll(query: string): Promise<SearchResponse> {
-  const settled = await Promise.allSettled(STORE_IDS.map((id) => searchStore(id, query)));
+  const settled = await Promise.allSettled(
+    STORE_IDS.map(async (id) => {
+      const list = await withDeadline(searchStore(id, query), STORE_DEADLINE_MS);
+      const fetchedAt = new Date().toISOString();
+      return list.map((p) => ({ ...p, fetchedAt }));
+    }),
+  );
 
   const stores: StoreResult[] = [];
   const products: Product[] = [];
@@ -75,7 +143,7 @@ export async function searchAll(query: string): Promise<SearchResponse> {
     query,
     fetchedAt: new Date().toISOString(),
     stores,
-    comparisons: buildComparisons(products),
+    ...buildComparisons(products),
     products,
   };
 }
