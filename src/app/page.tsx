@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PriceSearch from "@/components/PriceSearch";
+import CollaborateButton from "@/components/CollaborateButton";
 import VisitorCounter from "@/components/VisitorCounter";
 import { getCachedOffers } from "@/lib/offers";
 import { STORE_IDS, STORES } from "@/lib/stores";
@@ -29,6 +30,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <VisitorCounter />
         </div>
       </header>
+      <CollaborateButton variant="strip" />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
         <PriceSearch key={initialQuery} initialQuery={initialQuery} offers={offers} />
@@ -63,6 +65,9 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 {AUTHOR.email}
               </a>
               .
+            </p>
+            <p className="mt-2">
+              ¿Te sirvió? <CollaborateButton variant="inline" />
             </p>
           </div>
         </div>
