@@ -1,3 +1,5 @@
+import { fromOwnSite, tooManyRequests } from "@/lib/guard";
+
 const COUNTER_API = "https://abacus.jasoncameron.dev";
 const NAMESPACE = "precios-super-sanjuan";
 // Local and preview deployments must not inflate the public number.
@@ -28,7 +30,8 @@ export async function GET() {
 }
 
 /** Called once per browser, the first time someone opens the site. */
-export async function POST() {
-  const value = await counter("hit");
+export async function POST(request: Request) {
+  // Solo suma desde el propio sitio y, como mucho, una vez por conexión cada hora.
+  const value = fromOwnSite(request) && !tooManyRequests(request, "visitas", 1, 3_600_000) ? await counter("hit") : await counter("get");
   return Response.json({ value }, { headers: { "Cache-Control": "no-store" } });
 }

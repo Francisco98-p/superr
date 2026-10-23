@@ -1,6 +1,10 @@
 import type { NextRequest } from "next/server";
 import { normalizeQuery } from "@/lib/query";
 import { searchAll } from "@/lib/search";
+import { tooManyRequests } from "@/lib/guard";
+
+// Letras (con tildes), números, espacios y algunos signos comunes en nombres de productos.
+const VALID_QUERY = /^[\p{L}\p{N} .,'%&\/+-]+$/u;
 
 export const maxDuration = 20;
 
@@ -11,6 +15,18 @@ export async function GET(request: NextRequest) {
     return Response.json(
       { error: "La búsqueda debe tener entre 2 y 60 caracteres." },
       { status: 400 },
+    );
+  }
+
+  if (!VALID_QUERY.test(query)) {
+    return Response.json({ error: "La búsqueda tiene caracteres no permitidos." }, { status: 400 });
+  }
+
+  // Las búsquedas repetidas salen de la caché de Vercel y no llegan acá; esto limita las nuevas.
+  if (tooManyRequests(request, "buscar", 30, 60_000)) {
+    return Response.json(
+      { error: "Hiciste muchas búsquedas seguidas. Esperá un minuto y volvé a intentar." },
+      { status: 429, headers: { "Retry-After": "60", "Cache-Control": "no-store" } },
     );
   }
 
