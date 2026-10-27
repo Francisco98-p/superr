@@ -176,3 +176,37 @@ export async function getCachedCafeAmericaOffers(): Promise<OffersResponse | nul
     return null;
   }
 }
+
+// ---------- Homepage: best offers with a few Café America products mixed in ----------
+
+const HOME_CAFE_OFFERS = 3;
+// Where the Café America products go in the list, so they're spread out instead of grouped.
+const HOME_CAFE_SLOTS = [1, 4, 7];
+
+/** Best offers with up to 3 Café America comparisons spread among them, same length as the best offers. */
+export async function getCachedHomeOffers(): Promise<OffersResponse | null> {
+  const [best, cafe] = await Promise.all([getCachedOffers(), getCachedCafeAmericaOffers()]);
+  if (!best && !cafe) return null;
+  const offers = [...(best?.offers ?? [])];
+  const hasCafe = (o: Offer) => o.offers.some((x) => x.store === "cafeamerica");
+  // One product per brand, so the few Café America ones aren't all the same line.
+  const brandOf = (o: Offer) => o.offers.find((x) => x.brand)?.brand?.toLowerCase() ?? o.ean;
+  const brands = new Set<string>();
+  const extra = (cafe?.offers ?? []).filter((o) => {
+    if (offers.some((b) => b.ean === o.ean) || brands.has(brandOf(o))) return false;
+    brands.add(brandOf(o));
+    return true;
+  });
+  let missing = Math.max(0, HOME_CAFE_OFFERS - offers.filter(hasCafe).length);
+  for (const slot of HOME_CAFE_SLOTS) {
+    if (missing === 0 || extra.length === 0) break;
+    offers.splice(Math.min(slot, offers.length), 0, extra.shift()!);
+    missing--;
+  }
+  const limit = Math.max(best?.offers.length ?? 0, MAX_OFFERS);
+  return {
+    fetchedAt: best?.fetchedAt ?? cafe!.fetchedAt,
+    offers: offers.slice(0, limit),
+    excluded: best?.excluded,
+  };
+}

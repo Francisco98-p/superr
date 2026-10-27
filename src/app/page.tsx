@@ -2,7 +2,7 @@ import Link from "next/link";
 import PriceSearch from "@/components/PriceSearch";
 import CollaborateButton from "@/components/CollaborateButton";
 import VisitorCounter from "@/components/VisitorCounter";
-import { getCachedCafeAmericaOffers, getCachedOffers } from "@/lib/offers";
+import { getCachedHomeOffers } from "@/lib/offers";
 import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
 
 const AUTHOR = { name: "Francisco Tejada", email: "franciscoemi98@gmail.com" };
@@ -13,8 +13,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const { q } = await searchParams;
   const initialQuery = typeof q === "string" ? q : "";
   // Not awaited: the page streams right away and the offers fill in when ready.
-  const offers = getCachedOffers();
-  const cafeOffers = getCachedCafeAmericaOffers();
+  const offers = getCachedHomeOffers();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -34,7 +33,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <CollaborateButton variant="strip" />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
-        <PriceSearch key={initialQuery} initialQuery={initialQuery} offers={offers} cafeOffers={cafeOffers} />
+        <PriceSearch key={initialQuery} initialQuery={initialQuery} offers={offers} />
       </main>
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-6">
