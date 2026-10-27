@@ -10,7 +10,7 @@ const geistSans = Geist({
 
 const title = "Precios Super San Juan | Compará precios de supermercados";
 const description =
-  "Compará precios de Carrefour, ChangoMás, La Anónima, Vea y Átomo en San Juan, Argentina. Encontrá dónde conviene comprar cada producto.";
+  "Compará precios de Carrefour, ChangoMás, La Anónima, Vea, Átomo y Café América en San Juan, Argentina. Encontrá dónde conviene comprar cada producto.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://precios-super-sanjuan.vercel.app"),

@@ -1,11 +1,14 @@
-export type StoreId = "carrefour" | "changomas" | "laanonima" | "vea" | "atomo";
+export type StoreId = "carrefour" | "changomas" | "laanonima" | "vea" | "atomo" | "cafeamerica";
 
 export type Store = {
   id: StoreId;
   name: string;
   color: string;
   site: string;
-  priceScope: "san-juan" | "online";
+  /** "lista": prices from a list the store sends us, not read from its website. */
+  priceScope: "san-juan" | "online" | "lista";
+  /** Short note shown next to its prices, e.g. which week a price list is for. */
+  priceNote?: string;
 };
 
 export type Product = {

@@ -2,7 +2,7 @@
 
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
-import { STORE_IDS, STORES } from "@/lib/stores";
+import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
 
 const QUICK_SEARCHES = ["leche", "pan", "aceite", "yerba", "arroz", "fideos", "azúcar", "harina"];
@@ -163,10 +163,8 @@ function ComparisonCard({
           const isCheapest = offer.store === group.cheapest;
           return (
             <li key={offer.store}>
-              <a
+              <MaybeLink
                 href={offer.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 className={`flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-sm transition hover:ring-1 hover:ring-black/20 ${
                   isCheapest ? "bg-emerald-50 ring-1 ring-emerald-300" : "bg-neutral-50"
                 }`}
@@ -177,11 +175,14 @@ function ComparisonCard({
                   {STORES[offer.store].priceScope === "online" && (
                     <span className="text-[11px] text-neutral-500">precio online</span>
                   )}
+                  {STORES[offer.store].priceScope === "lista" && (
+                    <span className="text-[11px] text-neutral-500">lista del súper</span>
+                  )}
                 </span>
                 <span className={`font-semibold tabular-nums ${isCheapest ? "text-emerald-700" : ""}`}>
                   {formatPrice(offer.price)}
                 </span>
-              </a>
+              </MaybeLink>
             </li>
           );
         })}
@@ -193,12 +194,20 @@ function ComparisonCard({
   );
 }
 
+/** A link to the store's product page, or a plain box when the store has no web page for it. */
+function MaybeLink({ href, className, children }: { href: string; className: string; children: React.ReactNode }) {
+  if (!href) return <div className={className}>{children}</div>;
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      {children}
+    </a>
+  );
+}
+
 function ProductCard({ product }: { product: Product }) {
   return (
-    <a
+    <MaybeLink
       href={product.url}
-      target="_blank"
-      rel="noopener noreferrer"
       className="flex gap-3 rounded-xl border border-black/10 bg-white p-3 shadow-sm transition hover:border-emerald-400"
     >
       <ProductImage srcs={[product.image]} alt={product.name} size={64} />
@@ -219,11 +228,15 @@ function ProductCard({ product }: { product: Product }) {
           )}
         </div>
         <span className="text-[11px] text-neutral-400" suppressHydrationWarning>
-          {STORES[product.store].priceScope === "online" ? "Precio online · " : ""}
-          {formatWhen(product.fetchedAt)}
+          {STORES[product.store].priceNote ?? (
+            <>
+              {STORES[product.store].priceScope === "online" ? "Precio online · " : ""}
+              {formatWhen(product.fetchedAt)}
+            </>
+          )}
         </span>
       </div>
-    </a>
+    </MaybeLink>
   );
 }
 
@@ -326,7 +339,8 @@ function OnlinePriceNotice() {
   return (
     <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
       <strong>Ojo:</strong> Vea y Átomo muestran su <strong>precio online</strong>, que puede ser distinto del de la
-      góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan.
+      góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan. Los de Café América
+      salen de la lista de precios que nos pasa el súper ({CAFE_AMERICA_VIGENCIA}).
     </p>
   );
 }

@@ -90,7 +90,7 @@ const cachedOffers = unstable_cache(
     if (offers.length === 0) throw new Error("No offers found");
     return { fetchedAt: new Date().toISOString(), offers, excluded };
   },
-  ["best-offers-v3"],
+  ["best-offers-v4"],
   { revalidate: OFFERS_REVALIDATE_S },
 );
 

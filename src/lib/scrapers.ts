@@ -1,3 +1,4 @@
+import cafeAmerica from "../data/cafe-america.json";
 import { STORES } from "./stores";
 import type { Product, StoreId } from "./types";
 import { unitPriceFromName } from "./units";
@@ -268,7 +269,56 @@ async function searchLaAnonima(query: string): Promise<ScrapedProduct[]> {
   return parsed.map(({ product }, i) => withUnitPrice({ ...product, ean: eans[i] }));
 }
 
+// ---------- Café América (lista de precios que manda el súper) ----------
+
+// The list uses short names ("SEDAL 340ml SH.CASPA CONT."): spell the abbreviations out so "shampoo" finds "SH.".
+const CA_EXPANSIONS: [RegExp, string][] = [
+  [/\bAC(?:ON|O)?\./gi, " acondicionador "],
+  [/\bSH\b\.?/gi, " shampoo "],
+  [/\bSUAV\./gi, " suavizante "],
+  [/\bJAB\.LIQ\./gi, " jabon liquido "],
+  [/\bJAB\.TOC\./gi, " jabon tocador "],
+  [/\bJAB\./gi, " jabon "],
+  [/\bGALL\./gi, " galletitas "],
+  [/\bDET\./gi, " detergente "],
+  [/\bTOA\./gi, " toallitas toallas femeninas "],
+  [/\bCR\./gi, " crema "],
+  [/\bPAP\.HIG\./gi, " papel higienico "],
+  [/\bMORTAD\./gi, " mortadela "],
+  [/\bFIAMB\./gi, " fiambre "],
+  [/\bCOC\./gi, " cocido "],
+  [/\bCRUDO\b/gi, " jamon crudo "],
+];
+const caNormalize = (s: string) =>
+  s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+const caIndex = cafeAmerica.items.map((item) => {
+  let text = ` ${item.nombre} `;
+  for (const [re, word] of CA_EXPANSIONS) text = text.replace(re, word);
+  return { item, words: caNormalize(`${item.nombre} ${text}`).split(" ") };
+});
+
+async function searchCafeAmerica(query: string): Promise<ScrapedProduct[]> {
+  const terms = caNormalize(query).split(" ").filter((t) => t.length > 1);
+  if (!terms.length) return [];
+  return caIndex
+    .filter(({ words }) => terms.every((t) => words.some((w) => w.startsWith(t))))
+    .slice(0, RESULTS_PER_STORE)
+    .map(({ item }) =>
+      withUnitPrice({
+        store: "cafeamerica",
+        name: item.nombre,
+        brand: null,
+        ean: item.ean,
+        price: item.precio,
+        regularPrice: null,
+        image: null,
+        url: "",
+      }),
+    );
+}
+
 export function searchStore(store: StoreId, query: string): Promise<ScrapedProduct[]> {
+  if (store === "cafeamerica") return searchCafeAmerica(query);
   if (store === "atomo") return searchAtomo(query);
   if (store === "laanonima") return searchLaAnonima(query);
   return searchVtex(store, query);
