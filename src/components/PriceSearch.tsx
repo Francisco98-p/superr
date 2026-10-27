@@ -341,9 +341,6 @@ function CafeAmericaHeader() {
       <h2 className="flex flex-wrap items-center gap-2 text-lg font-bold">
         Esta semana en <StoreBadge store="cafeamerica" />
       </h2>
-      <p className="text-sm text-neutral-500">
-        Precios de la lista de Café América ({CAFE_AMERICA_VIGENCIA}) comparados con los demás supermercados.
-      </p>
     </div>
   );
 }
