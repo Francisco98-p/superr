@@ -335,6 +335,48 @@ function BestOffers({ offers, onSearch }: { offers: Promise<OffersResponse | nul
   );
 }
 
+function CafeAmericaHeader() {
+  return (
+    <div className="mb-3">
+      <h2 className="flex flex-wrap items-center gap-2 text-lg font-bold">
+        Esta semana en <StoreBadge store="cafeamerica" />
+      </h2>
+      <p className="text-sm text-neutral-500">
+        Precios de la lista de Café América ({CAFE_AMERICA_VIGENCIA}) comparados con los demás supermercados.
+      </p>
+    </div>
+  );
+}
+
+function CafeAmericaLoading() {
+  return (
+    <section aria-busy="true">
+      <CafeAmericaHeader />
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }, (_, i) => (
+          <OfferCardSkeleton key={i} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CafeAmericaOffers({ offers }: { offers: Promise<OffersResponse | null> }) {
+  const result = use(offers);
+  // Without results the section is left out: the best offers below still show.
+  if (!result || result.offers.length === 0) return null;
+  return (
+    <section>
+      <CafeAmericaHeader />
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {result.offers.map((offer) => (
+          <ComparisonCard key={offer.ean} group={offer} savingsPct={offer.savingsPct} verify={offer.verify} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function OnlinePriceNotice() {
   return (
     <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
@@ -348,9 +390,11 @@ function OnlinePriceNotice() {
 export default function PriceSearch({
   initialQuery,
   offers,
+  cafeOffers,
 }: {
   initialQuery: string;
   offers: Promise<OffersResponse | null>;
+  cafeOffers: Promise<OffersResponse | null>;
 }) {
   const hasInitialQuery = initialQuery.trim().length >= 2;
   const [input, setInput] = useState(initialQuery);
@@ -466,6 +510,9 @@ export default function PriceSearch({
 
       {!data && !loading && (
         <>
+          <Suspense fallback={<CafeAmericaLoading />}>
+            <CafeAmericaOffers offers={cafeOffers} />
+          </Suspense>
           <Suspense fallback={<BestOffersLoading />}>
             <BestOffers offers={offers} onSearch={runSearch} />
           </Suspense>

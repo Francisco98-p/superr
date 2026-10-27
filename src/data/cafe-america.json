@@ -4,427 +4,498 @@
   "fuente": "Lista de precios enviada por Café América (planilla «4ta semana octubre 2026»)",
   "items": [
     {
-      "nombre": "LOS CALVOS 1kg MORTAD. C/PISTACHO",
+      "nombre": "Mortadela con pistacho Los Calvos x kg",
+      "nombreLista": "LOS CALVOS 1kg MORTAD. C/PISTACHO",
       "precio": 11675,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "LOS TRES 1kg CRUDO C/CUERO(PERNIL)",
+      "nombre": "Jamón crudo con cuero (pernil) Los Tres x kg",
+      "nombreLista": "LOS TRES 1kg CRUDO C/CUERO(PERNIL)",
       "precio": 17349,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "MANANTIALES 1 kg. QUESO CREMOSO",
+      "nombre": "Queso cremoso Manantiales x kg",
+      "nombreLista": "MANANTIALES 1 kg. QUESO CREMOSO",
       "precio": 6185,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "RECREO 1KG JAMON COC.MINI / GRANDE S/C",
+      "nombre": "Jamón cocido Recreo x kg",
+      "nombreLista": "RECREO 1KG JAMON COC.MINI / GRANDE S/C",
       "precio": 10999,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "SWIFT 20x80g HAMBURGUESA CLASICA",
+      "nombre": "Hamburguesas clásicas Swift 20 un. de 80 g (1,6 kg)",
+      "nombreLista": "SWIFT 20x80g HAMBURGUESA CLASICA",
       "precio": 21935,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "TREMBLAY 1kg QUESO DANBO",
+      "nombre": "Queso danbo Tremblay x kg",
+      "nombreLista": "TREMBLAY 1kg QUESO DANBO",
       "precio": 9659,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "TROZER 1kg FIAMB. P/EMPAR.",
+      "nombre": "Fiambre para empanadas Trozer x kg",
+      "nombreLista": "TROZER 1kg FIAMB. P/EMPAR.",
       "precio": 4559,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "CELUSAL 2001 500GR FINA PAQUETE",
+      "nombre": "Sal fina Celusal en paquete 500 g",
+      "nombreLista": "CELUSAL 2001 500GR FINA PAQUETE",
       "precio": 999,
       "ean": "7790072001014",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/5963-pdt_300/sal-fina-celusal-paquete-500-grs-.jpg"
     },
     {
-      "nombre": "DOÑA PUPA 340gr ARVEJAS TETRA",
+      "nombre": "Arvejas Doña Pupa tetra 340 g",
+      "nombreLista": "DOÑA PUPA 340gr ARVEJAS TETRA",
       "precio": 389,
       "ean": "7798096031055",
       "imagen": "https://masonlineprod.vtexassets.com/arquivos/ids/295038-160-160/Arvejas-Do-a-Pupa-Secas-Remojadas-340gr-1-47347.jpg?v=638285205716130000"
     },
     {
-      "nombre": "HELLMANS 500gr KETCHUP DOY PACK",
+      "nombre": "Ketchup Hellmann's doypack 500 g",
+      "nombreLista": "HELLMANS 500gr KETCHUP DOY PACK",
       "precio": 2979,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "LA NEGRA 90GR PATE DE FOIE",
+      "nombre": "Paté de foie La Negra 90 g",
+      "nombreLista": "LA NEGRA 90GR PATE DE FOIE",
       "precio": 625,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "LA NEGRA 90GR PICADILLO DE CARNE",
+      "nombre": "Picadillo de carne La Negra 90 g",
+      "nombreLista": "LA NEGRA 90GR PICADILLO DE CARNE",
       "precio": 625,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "OREO 3x118gr GALL.RELL.VAINI.",
+      "nombre": "Galletitas Oreo Golden vainilla rellenas tripack 3 x 118 g (354 g)",
+      "nombreLista": "OREO 3x118gr GALL.RELL.VAINI.",
       "precio": 4629,
       "ean": "7622201806538",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/882319-160-160/7622201806538_E01.jpg?v=639155697231930000"
     },
     {
-      "nombre": "TODDY 126gr GALL.ORIGINAL C/CHIP.CHOCO.",
+      "nombre": "Galletitas Toddy original con chips de chocolate 126 g",
+      "nombreLista": "TODDY 126gr GALL.ORIGINAL C/CHIP.CHOCO.",
       "precio": 1929,
       "ean": "7790380023432",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/66753-pdt_300/galletas-dulces-toddy-chispas-choco-126-grs-.jpg"
     },
     {
-      "nombre": "ALA 200gr JAB.FRAG.COCO",
+      "nombre": "Jabón en pan para ropa Ala coco 200 g",
+      "nombreLista": "ALA 200gr JAB.FRAG.COCO",
       "precio": 1199,
       "ean": "7791290793453",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/856856-160-160/Jab-n-En-Barra-Ala-Ecolavado-200-Gr-1-944078.jpg?v=638755979796370000"
     },
     {
-      "nombre": "ALWAYS 8un TOA.PROT.SUAVE XTRA",
+      "nombre": "Toallas femeninas Always Xtra protección suave 8 un.",
+      "nombreLista": "ALWAYS 8un TOA.PROT.SUAVE XTRA",
       "precio": 1325,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "SEDAL 340ml AC. LUMINOUS UV",
+      "nombre": "Acondicionador Sedal Luminous UV 340 ml",
+      "nombreLista": "SEDAL 340ml AC. LUMINOUS UV",
       "precio": 3999,
       "ean": "7791293051468",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/714481-160-160/7791293051468_01.jpg?v=638941508736330000"
     },
     {
-      "nombre": "SEDAL 340ml AC.CERAMIDAS",
+      "nombre": "Acondicionador Sedal Ceramidas 340 ml",
+      "nombreLista": "SEDAL 340ml AC.CERAMIDAS",
       "precio": 3999,
       "ean": "7791293045931",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/60449-pdt_300/acondicionador-sedal-ceramidas-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml AC.CR.BALAN.INF.",
+      "nombre": "Acondicionador Sedal Crema Balance 340 ml",
+      "nombreLista": "SEDAL 340ml AC.CR.BALAN.INF.",
       "precio": 3999,
       "ean": "7791293045948",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/63786-pdt_300/acondicionador-sedal-crema-balance-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml AC.HIALURON.",
+      "nombre": "Acondicionador Sedal Hialurónico 340 ml",
+      "nombreLista": "SEDAL 340ml AC.HIALURON.",
       "precio": 3999,
       "ean": "7791293046433",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/880982-160-160/Acondicionador-Sedal-Hialur-nico-Y-Vitamina-A-340-Ml-1-972721.jpg?v=638913011043570000"
     },
     {
-      "nombre": "SEDAL 340ml AC.LIS.PERF.INF.",
+      "nombre": "Acondicionador Sedal Liso Perfecto 340 ml",
+      "nombreLista": "SEDAL 340ml AC.LIS.PERF.INF.",
       "precio": 3999,
       "ean": "7791293045955",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/63780-pdt_300/acondicionador-sedal-liso-perfect-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml AC.MEGACRECIM.",
+      "nombre": "Acondicionador Sedal Mega Crecimiento 340 ml",
+      "nombreLista": "SEDAL 340ml AC.MEGACRECIM.",
       "precio": 3999,
       "ean": "7791293052250",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/69496-pdt_300/acondicionador-sedal-mega-crecimient-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml AC.REST.INTAN.",
+      "nombre": "Acondicionador Sedal Restauración Instantánea 340 ml",
+      "nombreLista": "SEDAL 340ml AC.REST.INTAN.",
       "precio": 3999,
       "ean": "7791293045962",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/923627-160-160/7791293045962_01.jpg?v=639240384189830000"
     },
     {
-      "nombre": "SEDAL 340ml AC.RIZOS DEFIN.",
+      "nombre": "Acondicionador Sedal Rizos Definidos 340 ml",
+      "nombreLista": "SEDAL 340ml AC.RIZOS DEFIN.",
       "precio": 3999,
       "ean": "7791293045979",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/921886-160-160/7791293045979_01.jpg?v=639238740707930000"
     },
     {
-      "nombre": "SEDAL 340ml ACO.COLAG./VITA.",
+      "nombre": "Acondicionador Sedal Colágeno y Vitamina C 340 ml",
+      "nombreLista": "SEDAL 340ml ACO.COLAG./VITA.",
       "precio": 3999,
       "ean": "7791293046464",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/935096-160-160/13720861002.jpg?v=639282796539000000"
     },
     {
-      "nombre": "SEDAL 340ml SH LUMINOUS UV",
+      "nombre": "Shampoo Sedal Luminous UV 340 ml",
+      "nombreLista": "SEDAL 340ml SH LUMINOUS UV",
       "precio": 3999,
       "ean": "7791293051437",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/68746-pdt_300/shampoo-sedal-luminous-uv-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml SH.CASPA CONT.",
+      "nombre": "Shampoo Sedal Caspa Control 340 ml",
+      "nombreLista": "SEDAL 340ml SH.CASPA CONT.",
       "precio": 3999,
       "ean": "7791293045788",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/923684-160-160/7791293045788_01.jpg?v=639240395707730000"
     },
     {
-      "nombre": "SEDAL 340ml SH.CERAM.INF.",
+      "nombre": "Shampoo Sedal Ceramidas 340 ml",
+      "nombreLista": "SEDAL 340ml SH.CERAM.INF.",
       "precio": 3999,
       "ean": "7791293045733",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/63768-pdt_300/shampoo-sedal-ceramidas-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml SH.COLAGENO&VIT C",
+      "nombre": "Shampoo Sedal Colágeno y Vitamina C 340 ml",
+      "nombreLista": "SEDAL 340ml SH.COLAGENO&VIT C",
       "precio": 3999,
       "ean": "7791293046402",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/923574-160-160/7791293046402_01.jpg?v=639240381389400000"
     },
     {
-      "nombre": "SEDAL 340ml SH.CRE.BALAN.INF.",
+      "nombre": "Shampoo Sedal Crema Balance 340 ml",
+      "nombreLista": "SEDAL 340ml SH.CRE.BALAN.INF.",
       "precio": 3999,
       "ean": "7791293045740",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/63771-pdt_300/shampoo-sedal-crema-balance-340-ml--.jpg"
     },
     {
-      "nombre": "SEDAL 340ml SH.HIALUR.VIT. A",
+      "nombre": "Shampoo Sedal Hialurónico y Vitamina A 340 ml",
+      "nombreLista": "SEDAL 340ml SH.HIALUR.VIT. A",
       "precio": 3999,
       "ean": "7791293046372",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/717144-160-160/7791293046372_01.jpg?v=638941535105400000"
     },
     {
-      "nombre": "SEDAL 340ml SH.LIS.PERF.INF.",
+      "nombre": "Shampoo Sedal Liso Perfecto 340 ml",
+      "nombreLista": "SEDAL 340ml SH.LIS.PERF.INF.",
       "precio": 3999,
       "ean": "7791293045757",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/296076-160-160/7791293045757_01.jpg?v=638131280958900000"
     },
     {
-      "nombre": "SEDAL 340ml SH.MEGACRECIM.",
+      "nombre": "Shampoo Sedal Mega Crecimiento 340 ml",
+      "nombreLista": "SEDAL 340ml SH.MEGACRECIM.",
       "precio": 3999,
       "ean": "7791293052236",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/916930-160-160/7791293052236_01.jpg?v=639228355742200000"
     },
     {
-      "nombre": "SEDAL 340ml SH.REST.INST.INF.",
+      "nombre": "Shampoo Sedal Restauración Instantánea 340 ml",
+      "nombreLista": "SEDAL 340ml SH.REST.INST.INF.",
       "precio": 3999,
       "ean": "7791293045764",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/880977-160-160/Shampoo-Restauraci-n-Instant-nea-340-Ml-Sedal-1-944701.jpg?v=638913011021470000"
     },
     {
-      "nombre": "SEDAL 340ml SH.RIZOS DEFINIDOS",
+      "nombre": "Shampoo Sedal Rizos Definidos 340 ml",
+      "nombreLista": "SEDAL 340ml SH.RIZOS DEFINIDOS",
       "precio": 3999,
       "ean": "7791293045771",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/923690-160-160/7791293045771_01.jpg?v=639240396200200000"
     },
     {
-      "nombre": "CURITAS 8un TELA ELASTIC.",
+      "nombre": "Apósitos Curitas de tela elástica 8 un.",
+      "nombreLista": "CURITAS 8un TELA ELASTIC.",
       "precio": 1089,
       "ean": "7702003010743",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/685599-160-160/7702003010743_01.jpg?v=638896509832800000"
     },
     {
-      "nombre": "DILON ROJO 1un SECADOR Nº40",
+      "nombre": "Secador de piso Dilon rojo Nº 40",
+      "nombreLista": "DILON ROJO 1un SECADOR Nº40",
       "precio": 3609,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "DONCELLA 16un TOA.C/A DUPACK",
+      "nombre": "Toallas femeninas Doncella con alas duo pack 16 un.",
+      "nombreLista": "DONCELLA 16un TOA.C/A DUPACK",
       "precio": 1299,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "DOWNY 450ml SUAV.CONC.ADORÁVEL",
+      "nombre": "Suavizante concentrado Downy Adorável 450 ml",
+      "nombreLista": "DOWNY 450ml SUAV.CONC.ADORÁVEL",
       "precio": 3999,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "DOWNY 450ml SUAV.CONC.MISTICO",
+      "nombre": "Suavizante concentrado Downy Místico 450 ml",
+      "nombreLista": "DOWNY 450ml SUAV.CONC.MISTICO",
       "precio": 3999,
       "ean": "7500435160087",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/835409-160-160/Suavizante-Para-La-Ropa-Downy-Mistico-450ml-1-1024717.jpg?v=638623679383570000"
     },
     {
-      "nombre": "DOWNY 500ml SUAV.CONC.BSA D.VERANO",
+      "nombre": "Suavizante concentrado Downy Brisa de Verano 500 ml",
+      "nombreLista": "DOWNY 500ml SUAV.CONC.BSA D.VERANO",
       "precio": 3999,
       "ean": "7506195143834",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/9274-pdt_300/suaviz-conc--downy-brisa-d-verano-500-ml--.jpg"
     },
     {
-      "nombre": "DOWNY 500ml SUAV.CONCENT.INTENSO",
+      "nombre": "Suavizante concentrado Downy Intenso 500 ml",
+      "nombreLista": "DOWNY 500ml SUAV.CONCENT.INTENSO",
       "precio": 3999,
       "ean": "7500435201292",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/951256-160-160/7500435201292_01.jpg?v=639277762820200000"
     },
     {
-      "nombre": "DOWNY 500ml SUAV.CONCENT.LIR DE CAMPO",
+      "nombre": "Suavizante concentrado Downy Lirios del Campo 500 ml",
+      "nombreLista": "DOWNY 500ml SUAV.CONCENT.LIR DE CAMPO",
       "precio": 3999,
       "ean": "7506195143858",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/950961-160-160/7506195143858_01.jpg?v=639277745516000000"
     },
     {
-      "nombre": "DOWNY 500ml SUAV.CONCENT.SUAV.BRISA",
+      "nombre": "Suavizante concentrado Downy Brisa Suave 500 ml",
+      "nombreLista": "DOWNY 500ml SUAV.CONCENT.SUAV.BRISA",
       "precio": 3999,
       "ean": "7500435243612",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/951300-160-160/7500435243612_02.jpg?v=639277776665130000"
     },
     {
-      "nombre": "DOWNY 500ml SUAV.VER.TROPICAL",
+      "nombre": "Suavizante Downy Verano Tropical 500 ml",
+      "nombreLista": "DOWNY 500ml SUAV.VER.TROPICAL",
       "precio": 3999,
       "ean": "7500435259552",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/887155-160-160/7500435259552_02.jpg?v=639160954392700000"
     },
     {
-      "nombre": "ECO 1UN ESPONJA/BRONCE",
+      "nombre": "Esponja de bronce Eco 1 un.",
+      "nombreLista": "ECO 1UN ESPONJA/BRONCE",
       "precio": 619,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "FELPITA 4x20mts PAP.HIG.D/H.CORAZ.ALG.",
+      "nombre": "Papel higiénico doble hoja Felpita corazón de algodón 4 rollos de 20 m",
+      "nombreLista": "FELPITA 4x20mts PAP.HIG.D/H.CORAZ.ALG.",
       "precio": 1395,
       "ean": "7791828900186",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/67990-pdt_300/papel-hig-d-h--felpita-20m-4-unid--.jpg"
     },
     {
-      "nombre": "FRAU 500cc ALCOHOL ETILICO 96º",
+      "nombre": "Alcohol etílico 96° Frau 500 ml",
+      "nombreLista": "FRAU 500cc ALCOHOL ETILICO 96º",
       "precio": 1545,
       "ean": "7795422000099",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/62216-pdt_300/alcohol-frau---500-cc--.jpg"
     },
     {
-      "nombre": "FUYI 12 unid TABLETAS REP",
+      "nombre": "Tabletas repelentes Fuyí repuesto 12 un.",
+      "nombreLista": "FUYI 12 unid TABLETAS REP",
       "precio": 2379,
       "ean": "7790520025838",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/67571-pdt_300/tabletas-fuyi-mmm-12-unid--.jpg"
     },
     {
-      "nombre": "HINDS 250ml CR.ROSA PLUS",
+      "nombre": "Crema corporal Hinds Rosa Plus 250 ml",
+      "nombreLista": "HINDS 250ml CR.ROSA PLUS",
       "precio": 4399,
       "ean": "7794640173073",
       "imagen": "https://masonlineprod.vtexassets.com/arquivos/ids/202994-160-160/Crema-Corporal-Hinds-Rosa-Plus-250-Ml-1-12050.jpg?v=637848777954200000"
     },
     {
-      "nombre": "LUX 120gr JAB.TOC.JAZ.CRE.BOT.",
+      "nombre": "Jabón de tocador Lux Botanicals Jazmín Cremoso 120 g",
+      "nombreLista": "LUX 120gr JAB.TOC.JAZ.CRE.BOT.",
       "precio": 1099,
       "ean": "7791293050843",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/930183-160-160/Jab-n-En-Barra-Jazm-n-Cremoso-120-Grs-Lux-1-1016929.jpg?v=639252781785230000"
     },
     {
-      "nombre": "LUX 120gr JAB.TOC.LIRIO AZ.BOT.",
+      "nombre": "Jabón de tocador Lux Botanicals Lirio Azul 120 g",
+      "nombreLista": "LUX 120gr JAB.TOC.LIRIO AZ.BOT.",
       "precio": 1099,
       "ean": "7791293050850",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/68035-pdt_300/jabon-tocador-lux-lirio-azul-120-grs-.jpg"
     },
     {
-      "nombre": "LUX 120gr JAB.TOC.ORQUI.NE.BOT.",
+      "nombre": "Jabón de tocador Lux Botanicals Orquídea Negra 120 g",
+      "nombreLista": "LUX 120gr JAB.TOC.ORQUI.NE.BOT.",
       "precio": 1099,
       "ean": "7791293050867",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/718677-160-160/7791293050867_01.jpg?v=638941586173470000"
     },
     {
-      "nombre": "LUX 120gr JAB.TOC.R.FRANCESA",
+      "nombre": "Jabón de tocador Lux Botanicals Rosas Francesas 120 g",
+      "nombreLista": "LUX 120gr JAB.TOC.R.FRANCESA",
       "precio": 1099,
       "ean": "7791293050874",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/68036-pdt_300/jabon-tocador-lux-rosas-francesas-120-grs-.jpg"
     },
     {
-      "nombre": "MAGISTRAL 500ml DET.LAV.MARINA.MULTIU",
+      "nombre": "Detergente Magistral Ultra Marina multiuso 500 ml",
+      "nombreLista": "MAGISTRAL 500ml DET.LAV.MARINA.MULTIU",
       "precio": 3865,
       "ean": "7790990003138",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/776059-160-160/7790990003138_01.jpg?v=639004769726930000"
     },
     {
-      "nombre": "MAGISTRAL 500ml DET.ULTRA LIMON",
+      "nombre": "Detergente Magistral Ultra Limón 500 ml",
+      "nombreLista": "MAGISTRAL 500ml DET.ULTRA LIMON",
       "precio": 3865,
       "ean": "7790990003039",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/69327-pdt_300/lavav-ultra-magistral-limon-500-ml--.jpg"
     },
     {
-      "nombre": "PLUSBELLE 1lt AC.BRILLO BIOPROT",
+      "nombre": "Acondicionador Plusbelle Brillo 1 L",
+      "nombreLista": "PLUSBELLE 1lt AC.BRILLO BIOPROT",
       "precio": 2879,
       "ean": "7790740000318",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/778806-160-160/7790740000318_01.jpg?v=639009750263300000"
     },
     {
-      "nombre": "PLUSBELLE 1lt AC.FRESCURA BIO PROT",
+      "nombre": "Acondicionador Plusbelle Frescura 1 L",
+      "nombreLista": "PLUSBELLE 1lt AC.FRESCURA BIO PROT",
       "precio": 2879,
       "ean": "7790740000325",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/778804-160-160/7790740000325_01.jpg?v=639009749147470000"
     },
     {
-      "nombre": "PLUSBELLE 1lt AC.PROTECCION BIO PROT",
+      "nombre": "Acondicionador Plusbelle Protección 1 L",
+      "nombreLista": "PLUSBELLE 1lt AC.PROTECCION BIO PROT",
       "precio": 2879,
       "ean": "7790740000363",
       "imagen": "https://veaargentina.vtexassets.com/arquivos/ids/892853-160-160/Acondicionador-Protecci-n-1000-Ml-Plusbelle-1-888050.jpg?v=639003731217370000"
     },
     {
-      "nombre": "PLUSBELLE 1lt AC.SUAVIDAD BIO PROT",
+      "nombre": "Acondicionador Plusbelle Suavidad 1 L",
+      "nombreLista": "PLUSBELLE 1lt AC.SUAVIDAD BIO PROT",
       "precio": 2879,
       "ean": "7790740000332",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/778802-160-160/7790740000332_01.jpg?v=639009748382470000"
     },
     {
-      "nombre": "PLUSBELLE 1lt ACON.NUTRICION",
+      "nombre": "Acondicionador Plusbelle Nutrición 1 L",
+      "nombreLista": "PLUSBELLE 1lt ACON.NUTRICION",
       "precio": 2879,
       "ean": "7790740000349",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/57212-pdt_300/acond-fliar-plusbelle-nutricion-1000-ml--.jpg"
     },
     {
-      "nombre": "PLUSBELLE 1lt SH.BRILLO BIO PROT",
+      "nombre": "Shampoo Plusbelle Brillo 1 L",
+      "nombreLista": "PLUSBELLE 1lt SH.BRILLO BIO PROT",
       "precio": 2879,
       "ean": "7790740000233",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/58113-pdt_300/shampoo-fliar-plusbelle-brillo-1000-ml--.jpg"
     },
     {
-      "nombre": "PLUSBELLE 1lt SH.FRESCURA BIO PROT",
+      "nombre": "Shampoo Plusbelle Frescura 1 L",
+      "nombreLista": "PLUSBELLE 1lt SH.FRESCURA BIO PROT",
       "precio": 2879,
       "ean": "7790740000240",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/778859-160-160/7790740000240_01.jpg?v=639009761524270000"
     },
     {
-      "nombre": "PLUSBELLE 1lt SH.NUTRICION BIO PROT",
+      "nombre": "Shampoo Plusbelle Nutrición 1 L",
+      "nombreLista": "PLUSBELLE 1lt SH.NUTRICION BIO PROT",
       "precio": 2879,
       "ean": "7790740000264",
       "imagen": "https://atomoconviene.com/atomo-ecommerce/58115-pdt_300/shampoo-fliar-plusbelle-nutricion-1000-ml--.jpg"
     },
     {
-      "nombre": "PLUSBELLE 1lt SH.PROTECCION BIO PROT",
+      "nombre": "Shampoo Plusbelle Protección 1 L",
+      "nombreLista": "PLUSBELLE 1lt SH.PROTECCION BIO PROT",
       "precio": 2879,
       "ean": "7790740000288",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/860765-160-160/7790740000288_01.jpg?v=639129189328630000"
     },
     {
-      "nombre": "PLUSBELLE 1lt SH.SUAVIDAD BIO PROT",
+      "nombre": "Shampoo Plusbelle Suavidad 1 L",
+      "nombreLista": "PLUSBELLE 1lt SH.SUAVIDAD BIO PROT",
       "precio": 2879,
       "ean": "7790740000257",
       "imagen": "https://carrefourar.vtexassets.com/arquivos/ids/778857-160-160/7790740000257_01.jpg?v=639009760822330000"
     },
     {
-      "nombre": "ZORRO 3lt DET.LIQ.PLUS DP",
+      "nombre": "Detergente líquido para ropa Zorro Plus doypack 3 L",
+      "nombreLista": "ZORRO 3lt DET.LIQ.PLUS DP",
       "precio": 7345,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "ZORRO 3lt JAB.LIQ.EVOL.ESC.PROT DP",
+      "nombre": "Jabón líquido para ropa Zorro Evolution protección doypack 3 L",
+      "nombreLista": "ZORRO 3lt JAB.LIQ.EVOL.ESC.PROT DP",
       "precio": 7345,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "ZORRO 3lt JAB.LIQ.EVOL.QUITAM.DP",
+      "nombre": "Jabón líquido para ropa Zorro Evolution quitamanchas doypack 3 L",
+      "nombreLista": "ZORRO 3lt JAB.LIQ.EVOL.QUITAM.DP",
       "precio": 7345,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "ZORRO 3lt SUAV.ELEGANTE DP",
+      "nombre": "Suavizante Zorro Elegante doypack 3 L",
+      "nombreLista": "ZORRO 3lt SUAV.ELEGANTE DP",
       "precio": 7345,
       "ean": null,
       "imagen": null
     },
     {
-      "nombre": "ZORRO 3lt SUAV.ORIENTAL DP",
+      "nombre": "Suavizante Zorro Oriental doypack 3 L",
+      "nombreLista": "ZORRO 3lt SUAV.ORIENTAL DP",
       "precio": 7345,
       "ean": null,
       "imagen": null

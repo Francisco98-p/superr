@@ -290,11 +290,12 @@ const CA_EXPANSIONS: [RegExp, string][] = [
   [/\bCRUDO\b/gi, " jamon crudo "],
 ];
 const caNormalize = (s: string) =>
-  s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/[^a-z0-9]+/g, " ").trim();
+// Search both the readable name and the store's own list name (with its abbreviations spelled out).
 const caIndex = cafeAmerica.items.map((item) => {
-  let text = ` ${item.nombre} `;
+  let text = ` ${item.nombreLista} `;
   for (const [re, word] of CA_EXPANSIONS) text = text.replace(re, word);
-  return { item, words: caNormalize(`${item.nombre} ${text}`).split(" ") };
+  return { item, words: caNormalize(`${item.nombre} ${item.nombreLista} ${text}`).split(" ") };
 });
 
 async function searchCafeAmerica(query: string): Promise<ScrapedProduct[]> {
