@@ -311,7 +311,7 @@ async function searchCafeAmerica(query: string): Promise<ScrapedProduct[]> {
         ean: item.ean,
         price: item.precio,
         regularPrice: null,
-        image: null,
+        image: item.imagen,
         url: "",
       }),
     );
