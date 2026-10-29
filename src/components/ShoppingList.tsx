@@ -12,6 +12,26 @@ const LISTA_KEY = "pssj-lista";
 const BONO_KEY = "pssj-bono";
 export const BONO_MONTO = 1000;
 const BONO_DIAS = 30;
+/** Marca que el visitante fue a pagar, para volver a la lista cuando regresa de Mercado Pago. */
+const PAGO_KEY = "pssj-pago-pendiente";
+const SECCION_ID = "lista-inteligente";
+
+function pagoPendiente(): boolean {
+  try {
+    return sessionStorage.getItem(PAGO_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function marcarPago(v: boolean) {
+  try {
+    if (v) sessionStorage.setItem(PAGO_KEY, "1");
+    else sessionStorage.removeItem(PAGO_KEY);
+  } catch {}
+}
+function irALista() {
+  document.getElementById(SECCION_ID)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 2 });
 const pesos = (v: number) => money.format(v);
@@ -128,9 +148,28 @@ async function refrescar(items: ItemLista[]): Promise<{ items: ItemLista[]; sinN
 }
 
 /** Mismo botón de Mercado Pago que «Colaborar con el programador»; al volver, «Ya pagué» activa el bono. */
-function Desbloqueo() {
+function Desbloqueo({ onDesbloqueo }: { onDesbloqueo: () => void }) {
   const { setBono } = useLista();
   const [pago, setPago] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (pagoPendiente()) setPago(true);
+  }, []);
+  function fueAPagar() {
+    setPago(true);
+    marcarPago(true);
+    // Cuando vuelve a esta pestaña desde Mercado Pago, lo llevamos directo a la lista.
+    const volver = () => {
+      if (document.visibilityState !== "visible") return;
+      document.removeEventListener("visibilitychange", volver);
+      window.removeEventListener("focus", volver);
+      setTimeout(irALista, 100);
+    };
+    setTimeout(() => {
+      document.addEventListener("visibilitychange", volver);
+      window.addEventListener("focus", volver);
+    }, 500);
+  }
   return (
     <div className="w-full max-w-sm rounded-xl bg-white p-4 text-center shadow-lg ring-2 ring-amber-400">
       <p className="font-bold text-neutral-900">🔒 Colaborá con {pesos(BONO_MONTO)} para desbloquear</p>
@@ -141,7 +180,7 @@ function Desbloqueo() {
         href={MERCADO_PAGO}
         target="_blank"
         rel="noopener"
-        onClick={() => setPago(true)}
+        onClick={fueAPagar}
         className="mt-3 block rounded-lg bg-[#009ee3] px-4 py-3 font-semibold text-white hover:bg-[#0089c7]"
       >
         Pagar {pesos(BONO_MONTO)} con Mercado Pago
@@ -150,7 +189,12 @@ function Desbloqueo() {
       {pago && (
         <button
           type="button"
-          onClick={() => setBono({ hasta: new Date(Date.now() + BONO_DIAS * 86400000).toISOString() })}
+          onClick={() => {
+            setBono({ hasta: new Date(Date.now() + BONO_DIAS * 86400000).toISOString() });
+            marcarPago(false);
+            onDesbloqueo();
+            setTimeout(irALista, 100);
+          }}
           className="mt-3 w-full rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white hover:bg-emerald-700"
         >
           ✓ Ya pagué, desbloquear
@@ -161,10 +205,19 @@ function Desbloqueo() {
 }
 
 export function ShoppingListPanel() {
-  const desbloqueo = <Desbloqueo />;
   const { items, quitar, vaciar, reemplazar, bono } = useLista();
   const cerca = useCercania();
   const [abierto, setAbierto] = useState(false);
+  const [verPago, setVerPago] = useState(false);
+  const desbloqueo = <Desbloqueo onDesbloqueo={() => setAbierto(true)} />;
+  // Si recarga la página después de ir a pagar, volvemos a mostrar el pago en la lista.
+  useEffect(() => {
+    if (!pagoPendiente()) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVerPago(true);
+    setAbierto(true);
+    setTimeout(irALista, 300);
+  }, []);
   const [actualizando, setActualizando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
   const activo = bonoActivo(bono);
@@ -175,7 +228,21 @@ export function ShoppingListPanel() {
       <div className="min-w-0">
         <p className="text-base font-bold text-violet-900">
           🛒 Lista de compras inteligente{" "}
-          {!activo && <span className="ml-1 rounded-full bg-amber-300 px-2 py-0.5 align-middle text-[11px] font-bold text-neutral-900">Bono colaborador {pesos(BONO_MONTO)}</span>}
+          {!activo && (
+            <button
+              type="button"
+              onClick={() => {
+                setVerPago((v) => !v);
+                if (items.length) setAbierto(true);
+              }}
+              className="ml-1 rounded-full bg-amber-300 px-2 py-0.5 align-middle text-[11px] font-bold text-neutral-900 underline-offset-2 hover:bg-amber-200 hover:underline"
+            >
+              Bono colaborador {pesos(BONO_MONTO)}
+            </button>
+          )}
+          {activo && (
+            <span className="ml-1 rounded-full bg-emerald-200 px-2 py-0.5 align-middle text-[11px] font-bold text-emerald-900">✓ Bono activo</span>
+          )}
         </p>
         <p className="mt-0.5 text-sm text-violet-900/80">
           {items.length
@@ -196,7 +263,12 @@ export function ShoppingListPanel() {
   );
 
   if (!items.length || !abierto) {
-    return <section className="rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm">{cabecera}</section>;
+    return (
+      <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm">
+        {cabecera}
+        {verPago && !activo && <div className="mt-3 flex justify-center">{desbloqueo}</div>}
+      </section>
+    );
   }
 
   const mejor = res.completos[0];
@@ -205,7 +277,7 @@ export function ShoppingListPanel() {
   const cercano = (Object.values(cerca).filter(Boolean) as { store: StoreId; km: number }[]).sort((a, b) => a.km - b.km);
 
   return (
-    <section className="rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm" aria-live="polite">
+    <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm" aria-live="polite">
       {cabecera}
 
       <ul className="mt-3 divide-y divide-violet-100 rounded-lg bg-white ring-1 ring-violet-200">
