@@ -1,0 +1,37 @@
+{
+  "fuente": "Carrefour y ChangoMás: puntos de retiro de sus tiendas online. Resto: OpenStreetMap (octubre 2026), con dirección por geocodificación inversa.",
+  "sucursales": [
+    { "store": "carrefour", "nombre": "Carrefour Hiper San Juan", "direccion": "General Acha Sur 32, Capital", "lat": -31.53390, "lon": -68.52485 },
+
+    { "store": "changomas", "nombre": "ChangoMás San Juan Norte", "direccion": "Av. Nazario Benavídez 1050 (O), Chimbas", "lat": -31.51138, "lon": -68.54584 },
+    { "store": "changomas", "nombre": "HiperChangoMás San Juan", "direccion": "Calle Zonda 936, Rivadavia", "lat": -31.54070, "lon": -68.57292 },
+    { "store": "changomas", "nombre": "ChangoMás Rawson", "direccion": "Dr. Ortega 746, Villa Krause", "lat": -31.57577, "lon": -68.54334 },
+
+    { "store": "laanonima", "nombre": "La Anónima San Juan", "direccion": "Raúl Scalabrini Ortiz 1285 (N), Desamparados", "lat": -31.52062, "lon": -68.54067 },
+
+    { "store": "vea", "nombre": "Vea Libertador", "direccion": "Av. Libertador San Martín 2359 (O), Desamparados", "lat": -31.52876, "lon": -68.55982 },
+    { "store": "vea", "nombre": "Vea Salta", "direccion": "Salta 1048 (N), Desamparados", "lat": -31.52211, "lon": -68.53703 },
+    { "store": "vea", "nombre": "Vea Trinidad", "direccion": "Saturnino Sarassa 102 (E), Trinidad", "lat": -31.55395, "lon": -68.52231 },
+    { "store": "vea", "nombre": "Vea Ignacio de la Roza", "direccion": "Av. José Ignacio de la Roza, Desamparados", "lat": -31.53868, "lon": -68.55569 },
+    { "store": "vea", "nombre": "Vea Centro", "direccion": "General Acha, Centro", "lat": -31.53572, "lon": -68.52438 },
+    { "store": "vea", "nombre": "Vea Concepción", "direccion": "25 de Mayo, Concepción", "lat": -31.53114, "lon": -68.52113 },
+    { "store": "vea", "nombre": "Vea Rawson", "direccion": "Pasaje Argentino, Villa Krause", "lat": -31.58339, "lon": -68.54085 },
+    { "store": "vea", "nombre": "Vea Rivadavia", "direccion": "Av. Libertador San Martín 4795 (O), Rivadavia", "lat": -31.52897, "lon": -68.58759 },
+    { "store": "vea", "nombre": "Vea Caucete", "direccion": "Diagonal Sarmiento, Caucete", "lat": -31.65651, "lon": -68.27694 },
+
+    { "store": "atomo", "nombre": "Átomo Chimbas", "direccion": "Calle Mendoza, Chimbas", "lat": -31.49777, "lon": -68.53238 },
+    { "store": "atomo", "nombre": "Átomo Trinidad", "direccion": "Av. España, Trinidad", "lat": -31.55169, "lon": -68.53265 },
+    { "store": "atomo", "nombre": "Átomo Granaderos", "direccion": "Granaderos, Barrio Sargento Cabral", "lat": -31.51932, "lon": -68.56213 },
+    { "store": "atomo", "nombre": "Átomo Concepción", "direccion": "Tucumán, Concepción", "lat": -31.52289, "lon": -68.52333 },
+    { "store": "atomo", "nombre": "Átomo Joaquín Uñac", "direccion": "Av. Intendente Joaquín Uñac", "lat": -31.59264, "lon": -68.53906 },
+    { "store": "atomo", "nombre": "Átomo Barrio CESAP", "direccion": "Pasaje General Juan Balcarce, Barrio CESAP", "lat": -31.53904, "lon": -68.58039 },
+    { "store": "atomo", "nombre": "Átomo Santa Lucía", "direccion": "Av. Libertador San Martín 2530, Santa Lucía", "lat": -31.53316, "lon": -68.49451 },
+    { "store": "atomo", "nombre": "Átomo Caucete", "direccion": "Av. de Los Ríos, Caucete", "lat": -31.66023, "lon": -68.26809 },
+
+    { "store": "cafeamerica", "nombre": "Café América Villa Krause", "direccion": "Calle Mendoza, Villa Krause", "lat": -31.58100, "lon": -68.53432 },
+    { "store": "cafeamerica", "nombre": "Café América Rivadavia", "direccion": "Reinaldo Molina, Rivadavia", "lat": -31.53372, "lon": -68.59269 },
+    { "store": "cafeamerica", "nombre": "Café América Desamparados", "direccion": "Víctor Hugo Nuche, Desamparados", "lat": -31.54516, "lon": -68.53908 },
+    { "store": "cafeamerica", "nombre": "Café América Mayorista Norte", "direccion": "Ing. César Cipolletti", "lat": -31.51110, "lon": -68.56773 },
+    { "store": "cafeamerica", "nombre": "Café América Mayorista Sur", "direccion": "Comandante Cabot 2318 (O)", "lat": -31.55318, "lon": -68.55661 }
+  ]
+}

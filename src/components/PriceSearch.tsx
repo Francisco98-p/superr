@@ -2,6 +2,8 @@
 
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
+import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
+import type { Cercana } from "@/lib/cercania";
 import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
 
@@ -178,6 +180,7 @@ function ComparisonCard({
                   {STORES[offer.store].priceScope === "lista" && (
                     <span className="text-[11px] text-neutral-500">lista del súper</span>
                   )}
+                  <DistanciaTag store={offer.store} />
                 </span>
                 <span className={`font-semibold tabular-nums ${isCheapest ? "text-emerald-700" : ""}`}>
                   {formatPrice(offer.price)}
@@ -212,7 +215,10 @@ function ProductCard({ product }: { product: Product }) {
     >
       <ProductImage srcs={[product.image]} alt={product.name} size={64} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <StoreBadge store={product.store} />
+        <span className="flex flex-wrap items-center gap-x-2">
+          <StoreBadge store={product.store} />
+          <DistanciaTag store={product.store} />
+        </span>
         <h3 className="mt-1 line-clamp-2 text-sm leading-snug">{product.name}</h3>
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 pt-1">
           <span className="text-base font-bold tabular-nums">{formatPrice(product.price)}</span>
@@ -358,6 +364,7 @@ export default function PriceSearch({
   const [loading, setLoading] = useState(hasInitialQuery);
   const [error, setError] = useState<string | null>(null);
   const [hiddenStores, setHiddenStores] = useState<Set<StoreId>>(new Set());
+  const [cercania, setCercania] = useState<Partial<Record<StoreId, Cercana>>>({});
   const [sortMode, setSortMode] = useState<SortMode>("price");
   const abortRef = useRef<AbortController | null>(null);
 
@@ -411,6 +418,7 @@ export default function PriceSearch({
   };
 
   return (
+    <CercaniaContext.Provider value={cercania}>
     <div className="space-y-6">
       <section className="rounded-xl border border-black/10 bg-white p-4 shadow-sm">
         <form
@@ -450,6 +458,8 @@ export default function PriceSearch({
           ))}
         </div>
       </section>
+
+      <NearestStore onCercania={setCercania} />
 
       <OnlinePriceNotice />
 
@@ -565,5 +575,6 @@ export default function PriceSearch({
         </div>
       )}
     </div>
+    </CercaniaContext.Provider>
   );
 }
