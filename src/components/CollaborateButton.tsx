@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 
 const ALIAS = "francisco.tejada.1";
-const MERCADO_PAGO = "https://link.mercadopago.com.ar/franciscotejada";
+export const MERCADO_PAGO = "https://link.mercadopago.com.ar/franciscotejada";
 
 export default function CollaborateButton({ variant = "strip" }: { variant?: "strip" | "inline" }) {
   const dialog = useRef<HTMLDialogElement>(null);

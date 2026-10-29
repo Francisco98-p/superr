@@ -3,6 +3,7 @@
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
 import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
+import { AddToListButton, ListaProvider, ShoppingListPanel } from "@/components/ShoppingList";
 import type { Cercana } from "@/lib/cercania";
 import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
@@ -193,6 +194,7 @@ function ComparisonCard({
       <p className="mt-2 text-[11px] text-neutral-400" suppressHydrationWarning>
         Precios del {formatWhen(oldest(group.offers.map((o) => o.fetchedAt)))}
       </p>
+      <AddToListButton group={group} />
     </article>
   );
 }
@@ -419,6 +421,7 @@ export default function PriceSearch({
 
   return (
     <CercaniaContext.Provider value={cercania}>
+    <ListaProvider query={data?.query ?? ""}>
     <div className="space-y-6">
       <section className="rounded-xl border border-black/10 bg-white p-4 shadow-sm">
         <form
@@ -460,6 +463,8 @@ export default function PriceSearch({
       </section>
 
       <NearestStore onCercania={setCercania} />
+
+      <ShoppingListPanel />
 
       <OnlinePriceNotice />
 
@@ -575,6 +580,7 @@ export default function PriceSearch({
         </div>
       )}
     </div>
+    </ListaProvider>
     </CercaniaContext.Provider>
   );
 }
