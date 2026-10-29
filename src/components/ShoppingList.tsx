@@ -223,48 +223,53 @@ export function ShoppingListPanel() {
   const activo = bonoActivo(bono);
   const res = useMemo(() => calcular(items, STORE_IDS), [items]);
 
+  // Todo el bloque es un botón: sin bono abre el pago; con bono abre o cierra los resultados.
+  function tocarBloque() {
+    if (!activo) {
+      setVerPago(true);
+      if (items.length) setAbierto(true);
+      setTimeout(irALista, 50);
+    } else if (items.length) {
+      setAbierto((v) => !v);
+    } else {
+      document.querySelector<HTMLInputElement>('input[type="search"], input[name="q"]')?.focus();
+    }
+  }
+
   const cabecera = (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div className="min-w-0">
-        <p className="text-base font-bold text-violet-900">
+    <button
+      type="button"
+      onClick={tocarBloque}
+      aria-expanded={abierto || verPago}
+      className="group flex w-full cursor-pointer flex-wrap items-center justify-between gap-3 rounded-lg text-left"
+    >
+      <span className="min-w-0">
+        <span className="block text-base font-bold text-violet-900">
           🛒 Lista de compras inteligente{" "}
           {!activo && (
-            <button
-              type="button"
-              onClick={() => {
-                setVerPago((v) => !v);
-                if (items.length) setAbierto(true);
-              }}
-              className="ml-1 rounded-full bg-amber-300 px-2 py-0.5 align-middle text-[11px] font-bold text-neutral-900 underline-offset-2 hover:bg-amber-200 hover:underline"
-            >
+            <span className="ml-1 rounded-full bg-amber-300 px-2 py-0.5 align-middle text-[11px] font-bold text-neutral-900 group-hover:bg-amber-200">
               Bono colaborador {pesos(BONO_MONTO)}
-            </button>
+            </span>
           )}
           {activo && (
             <span className="ml-1 rounded-full bg-emerald-200 px-2 py-0.5 align-middle text-[11px] font-bold text-emerald-900">✓ Bono activo</span>
           )}
-        </p>
-        <p className="mt-0.5 text-sm text-violet-900/80">
+        </span>
+        <span className="mt-0.5 block text-sm text-violet-900/80">
           {items.length
             ? `${items.length} ${items.length === 1 ? "producto" : "productos"} en tu lista.`
             : "Tocá «🛒 Agregar a mi lista» en los productos que comprás y te decimos en qué súper te sale más barata toda la compra."}
-        </p>
-      </div>
-      {items.length > 0 && (
-        <button
-          type="button"
-          onClick={() => setAbierto((v) => !v)}
-          className="shrink-0 rounded-lg bg-violet-700 px-4 py-2.5 font-semibold text-white hover:bg-violet-800"
-        >
-          {abierto ? "Ocultar" : "Ver dónde me conviene"}
-        </button>
-      )}
-    </div>
+        </span>
+      </span>
+      <span className="shrink-0 rounded-lg bg-violet-700 px-4 py-2.5 font-semibold text-white group-hover:bg-violet-800">
+        {abierto && items.length ? "Ocultar" : !activo ? `Desbloquear por ${pesos(BONO_MONTO)}` : items.length ? "Ver dónde me conviene" : "Buscar productos"}
+      </span>
+    </button>
   );
 
   if (!items.length || !abierto) {
     return (
-      <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm">
+      <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm transition hover:border-violet-700 hover:shadow-md">
         {cabecera}
         {verPago && !activo && <div className="mt-3 flex justify-center">{desbloqueo}</div>}
       </section>
@@ -277,7 +282,7 @@ export function ShoppingListPanel() {
   const cercano = (Object.values(cerca).filter(Boolean) as { store: StoreId; km: number }[]).sort((a, b) => a.km - b.km);
 
   return (
-    <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm" aria-live="polite">
+    <section id={SECCION_ID} className="scroll-mt-4 rounded-xl border-2 border-violet-500 bg-violet-50 p-4 shadow-sm transition hover:border-violet-700 hover:shadow-md" aria-live="polite">
       {cabecera}
 
       <ul className="mt-3 divide-y divide-violet-100 rounded-lg bg-white ring-1 ring-violet-200">
