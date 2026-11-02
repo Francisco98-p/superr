@@ -12,11 +12,12 @@ agrupa el mismo producto por código de barras (EAN) y te muestra dónde convien
 | ChangoMás  | masonline.com.ar (VTEX)        | Región San Juan (CP 5400)                     |
 | La Anónima | laanonima.com.ar (HTML)        | Sucursal San Juan, ex Hiper Libertad (id 180) |
 | Vea        | vea.com.ar (VTEX)              | Precio online nacional                        |
-| Átomo      | atomoconviene.com (PrestaShop) | Precio de la tienda online                    |
+| Átomo       | atomoconviene.com (PrestaShop) | Precio de la tienda online                    |
+| Maxiconsumo | maxiconsumo.com (Magento)      | Precio web (retiro en sucursal San Juan)      |
 
 No incluidos (no tienen tienda online con buscador o no están en San Juan):
 
-- **Makro** y **Yaguar** (mayoristas): solo publican catálogos/folletos, sin buscador de precios.
+- **Makro** y **Yaguar** (mayoristas): solo publican catálogos/folletos o requieren login de comerciante.
 - **Jumbo / Disco / Coto / Diarco**: no tienen sucursales en San Juan.
 
 En La Anónima se muestra el precio que paga cualquier cliente; el "precio PLUS" (solo con la
@@ -26,6 +27,7 @@ tarjeta de La Anónima) no se usa.
 
 - `src/lib/scrapers.ts`: consulta la búsqueda de cada tienda. En las tiendas VTEX se usa la
   API `intelligent-search` con la región del código postal 5400 para obtener precios de San Juan.
+  Maxiconsumo se parsea desde el HTML de Magento de la sucursal San Juan (precio web).
 - `src/lib/search.ts`: junta los resultados, agrupa por código de barras y calcula el ahorro.
 - `src/app/api/buscar/route.ts`: endpoint `GET /api/buscar?q=...`. Las respuestas se cachean
   30 minutos en la CDN de Vercel para no saturar a los supermercados.

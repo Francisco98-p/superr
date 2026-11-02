@@ -318,9 +318,69 @@ async function searchCafeAmerica(query: string): Promise<ScrapedProduct[]> {
     );
 }
 
+// ---------- Magento (Maxiconsumo) ----------
+
+/** Web price for the San Juan branch; guests see the national web unit price (bulto cerrado). */
+async function searchMaxiconsumo(query: string): Promise<ScrapedProduct[]> {
+  const { site } = STORES.maxiconsumo;
+  const params = new URLSearchParams({ q: query });
+  const html = await getText(`${site}/catalogsearch/result/?${params}`, {
+    Accept: "text/html,application/xhtml+xml",
+  });
+
+  const products: ScrapedProduct[] = [];
+  for (const block of html.split('class="item product product-item"').slice(1)) {
+    if (products.length >= RESULTS_PER_STORE) break;
+
+    const stock = block.match(/class="[^"]*stock-status[^"]*"[^>]*>([^<]+)/)?.[1]?.trim().toLowerCase();
+    if (stock && !stock.includes("en stock")) continue;
+
+    const link = block.match(/product-item-link"\s+href="([^"]+)"\s*>\s*([^<]+)/);
+    if (!link) continue;
+    const url = link[1];
+    const name = decodeHtml(link[2]);
+    if (!name) continue;
+
+    // Advertised web price: unit price when buying the closed case.
+    const bulto = block.match(
+      /Precio unitario por bulto cerrado<\/span>[\s\S]*?class='price'>\$\s*([\d.]+),(\d+)/,
+    );
+    const unitDisplay = block.match(
+      />Precio unitario<\/span>[\s\S]*?class="price">\$\s*([\d.]+),(\d+)/,
+    );
+    if (!bulto && !unitDisplay) continue;
+
+    const price = bulto
+      ? parseArPrice(bulto[1], bulto[2])
+      : parseArPrice(unitDisplay![1], unitDisplay![2]);
+    if (!price) continue;
+
+    const listedUnit = unitDisplay ? parseArPrice(unitDisplay[1], unitDisplay[2]) : null;
+    const regularPrice = listedUnit && listedUnit > price + 0.01 ? listedUnit : null;
+    const image = block.match(/class="product-image-photo"\s+src="([^"]+)"/)?.[1] ?? null;
+
+    products.push(
+      withUnitPrice({
+        store: "maxiconsumo",
+        name,
+        brand: null,
+        // Maxiconsumo does not publish barcodes on the public catalog.
+        ean: null,
+        price,
+        regularPrice,
+        image,
+        url,
+      }),
+    );
+  }
+  return products;
+
+}
+
 export function searchStore(store: StoreId, query: string): Promise<ScrapedProduct[]> {
   if (store === "cafeamerica") return searchCafeAmerica(query);
   if (store === "atomo") return searchAtomo(query);
   if (store === "laanonima") return searchLaAnonima(query);
+  if (store === "maxiconsumo") return searchMaxiconsumo(query);
   return searchVtex(store, query);
 }

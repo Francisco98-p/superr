@@ -46,8 +46,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 .map((id) => STORES[id].name)
                 .join(", ")}
               . Son los mismos datos públicos que ves al entrar a cada tienda: no hay acuerdos ni datos pagos.
-              Carrefour, ChangoMás y La Anónima se consultan con la sucursal de San Juan; Vea y Átomo, con su precio
-              online.
+              Carrefour, ChangoMás y La Anónima se consultan con la sucursal de San Juan; Vea, Átomo y Maxiconsumo,
+              con su precio online.
             </p>
             <p className="mt-2">
               Solo comparamos un producto cuando tiene el mismo código de barras y además coinciden el gramaje, el
@@ -80,8 +80,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         <div className="mx-auto max-w-6xl space-y-1 px-4 py-4 text-xs text-neutral-500">
           <p>
             Precios obtenidos en tiempo real de las tiendas online. Carrefour, ChangoMás y La Anónima muestran
-            el precio de su sucursal de San Juan; Vea y Átomo muestran su precio online, que puede diferir del
-            de la góndola.
+            el precio de su sucursal de San Juan; Vea, Átomo y Maxiconsumo muestran su precio online, que puede
+            diferir del de la góndola.
           </p>
           <p className="font-medium text-neutral-600">
             Sitio independiente, no pertenece a ningún supermercado. Verificá el precio antes de comprar.

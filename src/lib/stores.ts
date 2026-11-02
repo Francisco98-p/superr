@@ -48,6 +48,13 @@ export const STORES: Record<StoreId, Store> = {
     priceScope: "lista",
     priceNote: `Lista del súper · ${CAFE_AMERICA_VIGENCIA}`,
   },
+  maxiconsumo: {
+    id: "maxiconsumo",
+    name: "Maxiconsumo",
+    color: "#c8102e",
+    site: "https://www.maxiconsumo.com/sucursal_san_juan",
+    priceScope: "online",
+  },
 };
 
 /** Supermercados ocultos: no se buscan ni se muestran. Se dejan cargados para poder volver a activarlos. */
