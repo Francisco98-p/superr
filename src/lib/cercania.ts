@@ -1,10 +1,12 @@
 import sucursales from "../data/sucursales.json";
+import { isHiddenStore } from "./stores";
 import type { StoreId } from "./types";
 
 export type Sucursal = { store: StoreId; nombre: string; direccion: string; lat: number; lon: number };
 export type Cercana = Sucursal & { km: number };
 
-const SUCURSALES = sucursales.sucursales as Sucursal[];
+// Sin las sucursales de supermercados ocultos.
+const SUCURSALES = (sucursales.sucursales as Sucursal[]).filter((s) => !isHiddenStore(s.store));
 
 /** Distance in a straight line, in km (haversine). */
 export function distanciaKm(lat1: number, lon1: number, lat2: number, lon2: number): number {

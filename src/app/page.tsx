@@ -3,7 +3,7 @@ import PriceSearch from "@/components/PriceSearch";
 import CollaborateButton from "@/components/CollaborateButton";
 import VisitorCounter from "@/components/VisitorCounter";
 import { getCachedHomeOffers } from "@/lib/offers";
-import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
+import { STORE_IDS, STORES } from "@/lib/stores";
 
 const AUTHOR = { name: "Francisco Tejada", email: "franciscoemi98@gmail.com" };
 
@@ -47,8 +47,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 .join(", ")}
               . Son los mismos datos públicos que ves al entrar a cada tienda: no hay acuerdos ni datos pagos.
               Carrefour, ChangoMás y La Anónima se consultan con la sucursal de San Juan; Vea y Átomo, con su precio
-              online. Café América no tiene tienda online: sus precios salen de la lista que nos pasa el propio súper
-              ({CAFE_AMERICA_VIGENCIA}).
+              online.
             </p>
             <p className="mt-2">
               Solo comparamos un producto cuando tiene el mismo código de barras y además coinciden el gramaje, el
@@ -82,7 +81,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <p>
             Precios obtenidos en tiempo real de las tiendas online. Carrefour, ChangoMás y La Anónima muestran
             el precio de su sucursal de San Juan; Vea y Átomo muestran su precio online, que puede diferir del
-            de la góndola. Café América: lista de precios del súper ({CAFE_AMERICA_VIGENCIA}).
+            de la góndola.
           </p>
           <p className="font-medium text-neutral-600">
             Sitio independiente, no pertenece a ningún supermercado. Verificá el precio antes de comprar.

@@ -384,7 +384,7 @@ export function ShoppingListPanel() {
             <p className="text-xs text-neutral-500">Activá tu ubicación arriba para ver además cuál te queda más cerca.</p>
           )}
           <p className="text-[11px] text-neutral-500">
-            Precios de las tiendas online y de la lista de Café América; verificá en el súper. Bono activo hasta el{" "}
+            Precios de las tiendas online; verificá en el súper. Bono activo hasta el{" "}
             {new Date(bono!.hasta).toLocaleDateString("es-AR")}.
           </p>
         </div>

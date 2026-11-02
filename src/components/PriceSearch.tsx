@@ -5,7 +5,7 @@ import { normalizeQuery } from "@/lib/query";
 import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
 import { AddToListButton, ListaProvider, ShoppingListPanel } from "@/components/ShoppingList";
 import type { Cercana } from "@/lib/cercania";
-import { CAFE_AMERICA_VIGENCIA, STORE_IDS, STORES } from "@/lib/stores";
+import { STORE_IDS, STORES } from "@/lib/stores";
 import type { ComparisonGroup, OffersResponse, Product, SearchResponse, StoreId } from "@/lib/types";
 
 const QUICK_SEARCHES = ["leche", "pan", "aceite", "yerba", "arroz", "fideos", "azúcar", "harina"];
@@ -347,8 +347,7 @@ function OnlinePriceNotice() {
   return (
     <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
       <strong>Ojo:</strong> Vea y Átomo muestran su <strong>precio online</strong>, que puede ser distinto del de la
-      góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan. Los de Café América
-      salen de la lista de precios que nos pasa el súper ({CAFE_AMERICA_VIGENCIA}).
+      góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan.
     </p>
   );
 }

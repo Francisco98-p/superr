@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import cafeAmerica from "../data/cafe-america.json";
 import { searchAll } from "./search";
+import { isHiddenStore } from "./stores";
 import type { ExcludedOffer, Offer, OffersResponse } from "./types";
 
 const OFFER_QUERIES = [
@@ -95,10 +96,28 @@ const cachedOffers = unstable_cache(
   { revalidate: OFFERS_REVALIDATE_S },
 );
 
+// Saca los supermercados ocultos de ofertas ya guardadas en caché (la caché se mantiene entre deploys).
+function withoutHidden(offers: Offer[]): Offer[] {
+  const out: Offer[] = [];
+  for (const o of offers) {
+    if (!o.offers.some((x) => isHiddenStore(x.store))) {
+      out.push(o);
+      continue;
+    }
+    const left = o.offers.filter((x) => !isHiddenStore(x.store)).sort((a, b) => a.price - b.price);
+    if (left.length < 2) continue;
+    const savings = left[left.length - 1].price - left[0].price;
+    if (savings <= 0) continue;
+    out.push({ ...o, offers: left, cheapest: left[0].store, savings, savingsPct: savings / left[left.length - 1].price });
+  }
+  return out;
+}
+
 /** Cached best offers, or null when they can't be computed right now. */
 export async function getCachedOffers(): Promise<OffersResponse | null> {
   try {
-    return await cachedOffers();
+    const r = await cachedOffers();
+    return { ...r, offers: withoutHidden(r.offers) };
   } catch {
     return null;
   }
@@ -185,7 +204,8 @@ const HOME_CAFE_SLOTS = [1, 4, 7];
 
 /** Best offers with up to 3 Café America comparisons spread among them, same length as the best offers. */
 export async function getCachedHomeOffers(): Promise<OffersResponse | null> {
-  const [best, cafe] = await Promise.all([getCachedOffers(), getCachedCafeAmericaOffers()]);
+  // Café América oculto: la portada muestra sólo las mejores ofertas.
+  const [best, cafe] = await Promise.all([getCachedOffers(), isHiddenStore("cafeamerica") ? null : getCachedCafeAmericaOffers()]);
   if (!best && !cafe) return null;
   const offers = [...(best?.offers ?? [])];
   const hasCafe = (o: Offer) => o.offers.some((x) => x.store === "cafeamerica");
