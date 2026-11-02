@@ -1,4 +1,4 @@
-import { parsePresentation, presentationMismatch, type Presentation } from "./presentation";
+import { parsePresentation, presentationMismatch, productNamesMatch, type Presentation } from "./presentation";
 import { searchStore } from "./scrapers";
 import { STORE_IDS } from "./stores";
 import type { ComparisonGroup, DiscardedGroup, Product, SearchResponse, StoreResult } from "./types";
@@ -44,6 +44,53 @@ function samePresentation(listings: Listing[]): { kept: Listing[]; dropped: { li
   return { kept: best, dropped };
 }
 
+function finalizeGroup(ean: string, offers: Product[]): ComparisonGroup {
+  const sorted = [...offers].sort((a, b) => a.price - b.price);
+  const prices = sorted.map((o) => o.price);
+  return {
+    ean,
+    name: sorted.reduce((a, b) => (b.name.length > a.name.length ? b : a)).name,
+    image: pickImage(sorted),
+    offers: sorted,
+    cheapest: sorted[0].store,
+    savings: Math.max(...prices) - Math.min(...prices),
+  };
+}
+
+/**
+ * Maxiconsumo (and similar) publish no barcode. Attach those listings to an existing
+ * barcode group when the title and presentation look like the same product.
+ */
+function attachOrphansWithoutEan(groups: ComparisonGroup[], products: Product[]): void {
+  const orphans = products
+    .filter((p) => !normalizeEan(p.ean))
+    .map((product) => ({ product, presentation: parsePresentation(product.name) }));
+  const used = new Set<Product>();
+
+  for (const group of groups) {
+    const groupPres = parsePresentation(group.name);
+    const stores = new Set(group.offers.map((o) => o.store));
+
+    for (const orphan of orphans) {
+      if (used.has(orphan.product) || stores.has(orphan.product.store)) continue;
+      if (presentationMismatch(groupPres, orphan.presentation)) continue;
+      const nameOk =
+        productNamesMatch(group.name, orphan.product.name) ||
+        group.offers.some((o) => productNamesMatch(o.name, orphan.product.name));
+      if (!nameOk) continue;
+
+      group.offers.push(orphan.product);
+      stores.add(orphan.product.store);
+      used.add(orphan.product);
+    }
+
+    if (group.offers.length) {
+      const next = finalizeGroup(group.ean, group.offers);
+      Object.assign(group, next);
+    }
+  }
+}
+
 function buildComparisons(products: Product[]): { comparisons: ComparisonGroup[]; discarded: DiscardedGroup[] } {
   const byEan = new Map<string, Listing[]>();
   for (const product of products) {
@@ -66,7 +113,7 @@ function buildComparisons(products: Product[]): { comparisons: ComparisonGroup[]
       const prev = perStore.get(product.store);
       if (!prev || product.price < prev.price) perStore.set(product.store, product);
     }
-    const offers = [...perStore.values()].sort((a, b) => a.price - b.price);
+    const offers = [...perStore.values()];
 
     if (dropped.length) {
       discarded.push({
@@ -81,17 +128,10 @@ function buildComparisons(products: Product[]): { comparisons: ComparisonGroup[]
       });
     }
     if (offers.length < 2) continue;
-
-    const prices = offers.map((o) => o.price);
-    groups.push({
-      ean,
-      name: offers.reduce((a, b) => (b.name.length > a.name.length ? b : a)).name,
-      image: pickImage(offers),
-      offers,
-      cheapest: offers[0].store,
-      savings: Math.max(...prices) - Math.min(...prices),
-    });
+    groups.push(finalizeGroup(ean, offers));
   }
+
+  attachOrphansWithoutEan(groups, products);
 
   return {
     comparisons: groups.sort((a, b) => b.offers.length - a.offers.length || b.savings - a.savings),

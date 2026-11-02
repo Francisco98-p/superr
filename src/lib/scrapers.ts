@@ -320,14 +320,30 @@ async function searchCafeAmerica(query: string): Promise<ScrapedProduct[]> {
 
 // ---------- Magento (Maxiconsumo) ----------
 
-/** Web price for the San Juan branch; guests see the national web unit price (bulto cerrado). */
-async function searchMaxiconsumo(query: string): Promise<ScrapedProduct[]> {
-  const { site } = STORES.maxiconsumo;
-  const params = new URLSearchParams({ q: query });
-  const html = await getText(`${site}/catalogsearch/result/?${params}`, {
-    Accept: "text/html,application/xhtml+xml",
-  });
+const MAXI_STOP = new Set(["de", "la", "el", "los", "las", "y", "en", "con", "del", "al", "a", "o", "un", "una"]);
+/** Magento ANDs every term; words like "molido" often aren't in their titles and wipe the results. */
+const MAXI_OPTIONAL = new Set([
+  "molido", "molida", "instantaneo", "instantanea", "liquido", "liquida", "polvo", "light", "zero",
+  "descremada", "descremado", "entera", "entero", "fortificada", "fortificado", "uht", "pack",
+]);
 
+/** Original query first, then without optional adjectives, then the two strongest tokens. */
+function maxiconsumoQueries(query: string): string[] {
+  const words = query
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length > 1 && !MAXI_STOP.has(w));
+  const withoutOptional = words.filter((w) => !MAXI_OPTIONAL.has(w));
+  const strong = [...withoutOptional].sort((a, b) => b.length - a.length).slice(0, 2);
+  const out: string[] = [query.trim()];
+  if (withoutOptional.length) out.push(withoutOptional.join(" "));
+  if (strong.length) out.push(strong.join(" "));
+  return [...new Set(out.map((q) => q.trim()).filter(Boolean))];
+}
+
+function parseMaxiconsumoHtml(html: string): ScrapedProduct[] {
   const products: ScrapedProduct[] = [];
   for (const block of html.split('class="item product product-item"').slice(1)) {
     if (products.length >= RESULTS_PER_STORE) break;
@@ -374,7 +390,20 @@ async function searchMaxiconsumo(query: string): Promise<ScrapedProduct[]> {
     );
   }
   return products;
+}
 
+/** Web price for the San Juan branch; guests see the national web unit price (bulto cerrado). */
+async function searchMaxiconsumo(query: string): Promise<ScrapedProduct[]> {
+  const { site } = STORES.maxiconsumo;
+  for (const q of maxiconsumoQueries(query)) {
+    const params = new URLSearchParams({ q });
+    const html = await getText(`${site}/catalogsearch/result/?${params}`, {
+      Accept: "text/html,application/xhtml+xml",
+    });
+    const products = parseMaxiconsumoHtml(html);
+    if (products.length) return products;
+  }
+  return [];
 }
 
 export function searchStore(store: StoreId, query: string): Promise<ScrapedProduct[]> {

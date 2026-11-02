@@ -81,3 +81,100 @@ export function presentationMismatch(a: Presentation, b: Presentation): string |
   }
   return null;
 }
+
+const NAME_STOP = new Set([
+  "de", "la", "el", "los", "las", "y", "en", "con", "para", "por", "un", "una", "del", "al", "a", "o",
+]);
+/** Words one store often writes and another omits for the same SKU; ignored when there is no barcode. */
+const NAME_FILLERS = new Set([
+  "molido",
+  "molida",
+  "instantaneo",
+  "instantanea",
+  "torrado",
+  "torrada",
+  "clasico",
+  "clasica",
+  "tradicional",
+  "original",
+  "premium",
+  "nuevo",
+  "nueva",
+  "pack",
+  "oferta",
+  "suave",
+  "mate", // "yerba" / "yerba mate"
+  "hierbas", // usually goes with "compuesta"
+  "azucar", // many titles omit "con azúcar" on the default SKU
+  "palo", // "con palo" omitted on short names
+]);
+
+/** If only one title has these, it is a different variety (not just a shorter catalog name). */
+const NAME_VARIANTS = new Set([
+  "compuesta",
+  "despalada",
+  "descremada",
+  "descremado",
+  "entera",
+  "entero",
+  "light",
+  "zero",
+  "mezcla",
+  "girasol",
+  "oliva",
+  "soja",
+  "vegetal",
+  "almendra",
+  "almendras",
+  "avena",
+  "coco",
+  "chocolate",
+  "vainilla",
+  "limon",
+  "naranja",
+  "menta",
+  "boldo",
+  "integral",
+  "descafeinado",
+  "descafeinada",
+  "bebe",
+  "infantil",
+  "sin", // "sin azúcar", "sin palo", etc.
+]);
+
+function nameTokens(name: string): Set<string> {
+  const text = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/(\d),(\d)/g, "$1.$2")
+    .replace(/[^a-z0-9\s]/g, " ");
+  // Drop sizes/units: matching already checks presentation separately.
+  MEASURE_RE.lastIndex = 0;
+  const withoutMeasures = text.replace(MEASURE_RE, " ").replace(/\b\d+(?:\.\d+)?\b/g, " ");
+  return new Set(
+    withoutMeasures
+      .split(/\s+/)
+      .filter((t) => t.length > 1 && !NAME_STOP.has(t)),
+  );
+}
+
+/**
+ * Whether two product titles look like the same item when there is no barcode
+ * (e.g. Maxiconsumo’s shorter names). Presentation must still be checked separately.
+ */
+export function productNamesMatch(a: string, b: string): boolean {
+  const ta = nameTokens(a);
+  const tb = nameTokens(b);
+  if (!ta.size || !tb.size) return false;
+
+  const core = (tokens: Set<string>) => [...tokens].filter((t) => !NAME_FILLERS.has(t));
+  const [smaller, larger] = core(ta).length <= core(tb).length ? [ta, tb] : [tb, ta];
+  const smallCore = core(smaller);
+  if (smallCore.length < 2) return false;
+  if (!smallCore.every((t) => larger.has(t))) return false;
+
+  // Longer title may add generic words ("palo", "suave"), but not another variety.
+  const extras = core(larger).filter((t) => !smaller.has(t));
+  return !extras.some((t) => NAME_VARIANTS.has(t));
+}
