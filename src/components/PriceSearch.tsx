@@ -2,7 +2,7 @@
 
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { normalizeQuery } from "@/lib/query";
-import BarcodeScanner from "@/components/BarcodeScanner";
+import BarcodeScanner, { ScannerHelp } from "@/components/BarcodeScanner";
 import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
 import { AddToListButton, ListaProvider, ShoppingListPanel } from "@/components/ShoppingList";
 import type { Cercana } from "@/lib/cercania";
@@ -449,9 +449,7 @@ export default function PriceSearch({
             {loading ? "Buscando..." : "Buscar"}
           </button>
         </form>
-        <p className="mt-2 text-sm text-neutral-600">
-          <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-bold text-emerald-800">NUEVO</span> En el súper tocá <b>📷</b> y escaneá el código de barras: te mostramos cuánto sale ese producto en cada supermercado.
-        </p>
+        <ScannerHelp onCode={runSearch} />
         <div className="mt-3 flex flex-wrap gap-2">
           {QUICK_SEARCHES.map((term) => (
             <button

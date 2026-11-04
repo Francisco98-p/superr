@@ -138,19 +138,68 @@ function Escaner({ onCode, onClose }: { onCode: (code: string) => void; onClose:
   );
 }
 
+/** Pregunta "¿Para qué sirve el escáner?": al tocarla se despliega cómo se usa y un botón para probarlo. */
+export function ScannerHelp({ onCode }: { onCode: (code: string) => void }) {
+  const [ver, setVer] = useState(false);
+  return (
+    <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50">
+      <button
+        type="button"
+        onClick={() => setVer((v) => !v)}
+        aria-expanded={ver}
+        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm font-semibold text-emerald-900"
+      >
+        <span>
+          <span className="mr-1.5 rounded bg-emerald-700 px-1.5 py-0.5 text-[11px] font-bold text-white">NUEVO</span>
+          📷 ¿Para qué sirve el escáner y cómo se usa?
+        </span>
+        <span aria-hidden className="text-lg leading-none">{ver ? "−" : "+"}</span>
+      </button>
+      {ver && (
+        <div className="border-t border-emerald-200 px-3 pb-3 pt-2 text-sm text-emerald-950">
+          <p>
+            <b>Sirve para saber al instante si un producto está más barato en otro súper</b>, sin escribir nada: estás en la góndola, lo escaneás y te mostramos el precio en cada supermercado.
+          </p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5">
+            <li>
+              Tocá <b>📷 Escanear</b> (al lado del buscador) y permití usar la cámara.
+            </li>
+            <li>Apuntá al código de barras del paquete (las rayitas con números) hasta que se lea solo.</li>
+            <li>Listo: ves cuánto sale en cada súper y cuánto ahorrás.</li>
+          </ol>
+          <p className="mt-2 text-xs text-emerald-900/80">Funciona en el celular (Android y iPhone). La cámara sólo se usa para leer el código: no se guardan fotos.</p>
+          <div className="mt-3">
+            <BarcodeScanner onCode={onCode} grande />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Botón "Escanear" + pantalla de cámara. Al leer un código válido llama a onCode con el número. */
-export default function BarcodeScanner({ onCode }: { onCode: (code: string) => void }) {
+export default function BarcodeScanner({ onCode, grande = false }: { onCode: (code: string) => void; grande?: boolean }) {
   const [abierto, setAbierto] = useState(false);
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setAbierto(true)}
-        className="shrink-0 rounded-lg border-2 border-emerald-700 bg-white px-3 py-2.5 font-semibold text-emerald-800 transition hover:bg-emerald-50"
-        aria-label="Escanear código de barras con la cámara"
-      >
-        📷 <span className="hidden sm:inline">Escanear</span>
-      </button>
+      {grande ? (
+        <button
+          type="button"
+          onClick={() => setAbierto(true)}
+          className="w-full rounded-lg bg-emerald-700 px-4 py-3 font-semibold text-white transition hover:bg-emerald-800 sm:w-auto"
+        >
+          📷 Escanear un producto ahora
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setAbierto(true)}
+          className="shrink-0 rounded-lg border-2 border-emerald-700 bg-white px-3 py-2.5 font-semibold text-emerald-800 transition hover:bg-emerald-50"
+          aria-label="Escanear código de barras con la cámara"
+        >
+          📷 <span className="hidden sm:inline">Escanear</span>
+        </button>
+      )}
       {abierto && (
         <Escaner
           onClose={() => setAbierto(false)}
