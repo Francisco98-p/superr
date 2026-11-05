@@ -34,6 +34,8 @@
     { "store": "cafeamerica", "nombre": "Café América Mayorista Norte", "direccion": "Ing. César Cipolletti", "lat": -31.51110, "lon": -68.56773 },
     { "store": "cafeamerica", "nombre": "Café América Mayorista Sur", "direccion": "Comandante Cabot 2318 (O)", "lat": -31.55318, "lon": -68.55661 },
 
-    { "store": "maxiconsumo", "nombre": "Maxiconsumo San Juan", "direccion": "Ruta N°40 Km 3456, Pocitos", "lat": -31.60438, "lon": -68.53007 }
+    { "store": "maxiconsumo", "nombre": "Maxiconsumo San Juan", "direccion": "Ruta N°40 Km 3456, Pocitos", "lat": -31.60438, "lon": -68.53007 },
+
+    { "store": "yaguar", "nombre": "Yaguar San Juan", "direccion": "Lateral Acceso Este, Santa Lucía", "lat": -31.55200, "lon": -68.48810 }
   ]
 }
