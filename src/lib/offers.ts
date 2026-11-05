@@ -82,17 +82,20 @@ export async function getBestOffers(): Promise<{ offers: Offer[]; excluded: Excl
 }
 
 const OFFERS_REVALIDATE_S = 6 * 60 * 60;
+// Con menos ofertas que esto el resultado es pobre (algunos súper no respondieron): no se guarda y se reintenta.
+const MIN_OFFERS_TO_CACHE = 6;
 
 // Shared by every visitor and kept across deploys; after 6 h the stale copy is
 // still served while a fresh one is computed in the background.
 const cachedOffers = unstable_cache(
   async (): Promise<OffersResponse> => {
     const { offers, excluded } = await getBestOffers();
-    // Throwing keeps an empty result (stores down) out of the cache.
-    if (offers.length === 0) throw new Error("No offers found");
+    // Throwing keeps an empty or poor result (stores down) out of the cache: the last good one is kept.
+    if (offers.length < MIN_OFFERS_TO_CACHE) throw new Error(`Only ${offers.length} offers found`);
     return { fetchedAt: new Date().toISOString(), offers, excluded };
   },
-  ["best-offers-v4"],
+  // v5: descarta la copia del 4/11 que había quedado con sólo 2 ofertas.
+  ["best-offers-v5"],
   { revalidate: OFFERS_REVALIDATE_S },
 );
 
