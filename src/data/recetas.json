@@ -1,0 +1,612 @@
+{
+  "nota": "Recetas caseras para 4 porciones. Cada ingrediente de almacén se busca con 'q' y se elige un producto cuyo nombre tenga todas las palabras de 'must'. kg / L: cantidad que lleva la receta (se cobra la parte proporcional). paq: fracción de un paquete. Los frescos (verdulería, carnicería) se listan pero no entran en el costo.",
+  "recetas": [
+    {
+      "id": "fideos-tuco",
+      "nombre": "Fideos con salsa de tomate",
+      "porciones": 4,
+      "pasos": "Rehogá la cebolla en aceite, sumá el puré de tomate y cociná 10 minutos. Herví los fideos, escurrí y serví con la salsa y queso rallado.",
+      "ingredientes": [
+        {
+          "nombre": "Fideos tirabuzón",
+          "q": "fideos tirabuzon",
+          "must": [
+            "fideo"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Aceite de girasol",
+          "q": "aceite girasol",
+          "must": [
+            "aceite",
+            "girasol"
+          ],
+          "L": 0.03
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.04
+        }
+      ],
+      "frescos": [
+        "1 cebolla"
+      ]
+    },
+    {
+      "id": "polenta",
+      "nombre": "Polenta con salsa y queso",
+      "porciones": 4,
+      "pasos": "Hervé 1,5 L de agua con sal y echá la polenta en lluvia revolviendo 5 minutos. Serví con la salsa de tomate caliente y queso rallado.",
+      "ingredientes": [
+        {
+          "nombre": "Polenta",
+          "q": "polenta",
+          "must": [
+            "polenta"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.06
+        },
+        {
+          "nombre": "Aceite de girasol",
+          "q": "aceite girasol",
+          "must": [
+            "aceite",
+            "girasol"
+          ],
+          "L": 0.03
+        }
+      ],
+      "frescos": [
+        "1 cebolla",
+        "1 morrón"
+      ]
+    },
+    {
+      "id": "arroz-atun",
+      "nombre": "Arroz con atún y arvejas",
+      "porciones": 4,
+      "pasos": "Cociná el arroz. Mezclalo con el atún escurrido, las arvejas y un poco de mayonesa. Se come frío o tibio.",
+      "ingredientes": [
+        {
+          "nombre": "Arroz largo fino",
+          "q": "arroz largo fino",
+          "must": [
+            "arroz"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Atún en lata (2)",
+          "q": "atun",
+          "must": [
+            "atun"
+          ],
+          "kg": 0.34,
+          "not": [
+            "gato",
+            "perro",
+            "mascota",
+            "alimento"
+          ]
+        },
+        {
+          "nombre": "Arvejas en lata",
+          "q": "arvejas",
+          "must": [
+            "arveja"
+          ],
+          "kg": 0.35
+        },
+        {
+          "nombre": "Mayonesa",
+          "q": "mayonesa",
+          "must": [
+            "mayonesa"
+          ],
+          "kg": 0.1
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "lentejas",
+      "nombre": "Guiso de lentejas",
+      "porciones": 4,
+      "pasos": "Remojá las lentejas. Rehogá cebolla y morrón, sumá papa y zapallo en cubos, el puré de tomate, las lentejas y agua. Cociná 40 minutos y agregá el arroz al final.",
+      "ingredientes": [
+        {
+          "nombre": "Lentejas",
+          "q": "lentejas",
+          "must": [
+            "lenteja"
+          ],
+          "kg": 0.4,
+          "not": [
+            "remojad",
+            "lata"
+          ]
+        },
+        {
+          "nombre": "Arroz largo fino",
+          "q": "arroz largo fino",
+          "must": [
+            "arroz"
+          ],
+          "kg": 0.15
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Aceite de girasol",
+          "q": "aceite girasol",
+          "must": [
+            "aceite",
+            "girasol"
+          ],
+          "L": 0.03
+        }
+      ],
+      "frescos": [
+        "2 papas",
+        "1 trozo de zapallo",
+        "1 cebolla",
+        "1 morrón",
+        "250 g de chorizo colorado (opcional)"
+      ]
+    },
+    {
+      "id": "tarta-choclo",
+      "nombre": "Tarta de choclo",
+      "porciones": 4,
+      "pasos": "Rehogá la cebolla, mezclala con el choclo cremoso, 3 huevos y el queso rallado. Volcá sobre la tapa de tarta y horneá 35 minutos.",
+      "ingredientes": [
+        {
+          "nombre": "Tapas para tarta",
+          "q": "tapas para tarta",
+          "must": [
+            "tarta"
+          ],
+          "paq": 1
+        },
+        {
+          "nombre": "Choclo cremoso en lata",
+          "q": "choclo cremoso",
+          "must": [
+            "choclo",
+            "crem"
+          ],
+          "kg": 0.35
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.05
+        }
+      ],
+      "frescos": [
+        "3 huevos",
+        "1 cebolla"
+      ]
+    },
+    {
+      "id": "fideos-atun-crema",
+      "nombre": "Fideos con atún y crema",
+      "porciones": 4,
+      "pasos": "Herví los fideos. En una sartén calentá la crema con el atún desmenuzado y una pizca de sal. Mezclá con los fideos y sumá queso rallado.",
+      "ingredientes": [
+        {
+          "nombre": "Fideos mostachol",
+          "q": "fideos mostachol",
+          "must": [
+            "fideo"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Atún en lata (2)",
+          "q": "atun",
+          "must": [
+            "atun"
+          ],
+          "kg": 0.34,
+          "not": [
+            "gato",
+            "perro",
+            "mascota",
+            "alimento"
+          ]
+        },
+        {
+          "nombre": "Crema de leche",
+          "q": "crema de leche",
+          "must": [
+            "crema",
+            "leche"
+          ],
+          "L": 0.2
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.04
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "pizza",
+      "nombre": "Pizza casera",
+      "porciones": 4,
+      "pasos": "Mezclá la harina con la levadura, agua tibia, sal y un chorro de aceite. Dejá levar 30 minutos, estirá, cubrí con puré de tomate y horneá. Sumá la muzzarella y gratiná.",
+      "ingredientes": [
+        {
+          "nombre": "Harina 000",
+          "q": "harina 000",
+          "must": [
+            "harina"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Levadura seca",
+          "q": "levadura seca",
+          "must": [
+            "levadura"
+          ],
+          "paq": 1
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.26
+        },
+        {
+          "nombre": "Muzzarella",
+          "q": "muzzarella",
+          "must": [
+            "queso",
+            "muzzarella"
+          ],
+          "kg": 0.4,
+          "not": [
+            "raviol",
+            "empanada",
+            "pizza",
+            "sorrent"
+          ]
+        },
+        {
+          "nombre": "Aceite de girasol",
+          "q": "aceite girasol",
+          "must": [
+            "aceite",
+            "girasol"
+          ],
+          "L": 0.03
+        }
+      ],
+      "frescos": [
+        "Orégano"
+      ]
+    },
+    {
+      "id": "salchichas-pure",
+      "nombre": "Salchichas con puré",
+      "porciones": 4,
+      "pasos": "Prepará el puré con leche caliente y una cucharada de manteca. Herví las salchichas 5 minutos y serví juntas.",
+      "ingredientes": [
+        {
+          "nombre": "Salchichas",
+          "q": "salchichas",
+          "must": [
+            "salchicha"
+          ],
+          "paq": 1
+        },
+        {
+          "nombre": "Puré de papas instantáneo",
+          "q": "pure de papas instantaneo",
+          "must": [
+            "pure",
+            "papa"
+          ],
+          "kg": 0.125
+        },
+        {
+          "nombre": "Leche",
+          "q": "leche entera",
+          "must": [
+            "leche"
+          ],
+          "L": 0.5
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "hamburguesas-pure",
+      "nombre": "Hamburguesas con puré",
+      "porciones": 4,
+      "pasos": "Cociná las hamburguesas a la plancha. Prepará el puré con leche caliente y serví juntas.",
+      "ingredientes": [
+        {
+          "nombre": "Hamburguesas (4 a 6)",
+          "q": "hamburguesas",
+          "must": [
+            "hamburguesa"
+          ],
+          "not": [
+            "pan",
+            "pancito",
+            "vegetal"
+          ],
+          "kg": 0.4
+        },
+        {
+          "nombre": "Puré de papas instantáneo",
+          "q": "pure de papas instantaneo",
+          "must": [
+            "pure",
+            "papa"
+          ],
+          "kg": 0.125
+        },
+        {
+          "nombre": "Leche",
+          "q": "leche entera",
+          "must": [
+            "leche"
+          ],
+          "L": 0.5
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "arroz-choclo",
+      "nombre": "Arroz con choclo y arvejas",
+      "porciones": 4,
+      "pasos": "Rehogá la cebolla, sumá el arroz, el caldo con agua caliente y cociná 15 minutos. Al final agregá el choclo y las arvejas escurridos.",
+      "ingredientes": [
+        {
+          "nombre": "Arroz largo fino",
+          "q": "arroz largo fino",
+          "must": [
+            "arroz"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Choclo en granos",
+          "q": "choclo en granos",
+          "must": [
+            "choclo",
+            "grano"
+          ],
+          "kg": 0.3
+        },
+        {
+          "nombre": "Arvejas en lata",
+          "q": "arvejas",
+          "must": [
+            "arveja"
+          ],
+          "kg": 0.35
+        },
+        {
+          "nombre": "Caldo de verdura",
+          "q": "caldo de verdura",
+          "must": [
+            "caldo"
+          ],
+          "paq": 0.25
+        }
+      ],
+      "frescos": [
+        "1 cebolla"
+      ]
+    },
+    {
+      "id": "noquis",
+      "nombre": "Ñoquis con salsa",
+      "porciones": 4,
+      "pasos": "Herví los ñoquis hasta que suban. Calentá la salsa con un chorro de aceite y serví con queso rallado.",
+      "ingredientes": [
+        {
+          "nombre": "Ñoquis",
+          "q": "ñoquis",
+          "must": [
+            "oqui"
+          ],
+          "kg": 1
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.05
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "ravioles",
+      "nombre": "Ravioles con salsa",
+      "porciones": 4,
+      "pasos": "Herví los ravioles según el paquete. Calentá la salsa y serví con queso rallado.",
+      "ingredientes": [
+        {
+          "nombre": "Ravioles",
+          "q": "ravioles",
+          "must": [
+            "raviol"
+          ],
+          "kg": 1
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.05
+        }
+      ],
+      "frescos": []
+    },
+    {
+      "id": "guiso-arroz",
+      "nombre": "Guiso de arroz",
+      "porciones": 4,
+      "pasos": "Dorá la carne con cebolla y morrón, sumá el puré de tomate, el caldo y agua. Agregá el arroz y cociná 18 minutos; al final, las arvejas.",
+      "ingredientes": [
+        {
+          "nombre": "Arroz largo fino",
+          "q": "arroz largo fino",
+          "must": [
+            "arroz"
+          ],
+          "kg": 0.4
+        },
+        {
+          "nombre": "Puré de tomate",
+          "q": "pure de tomate",
+          "must": [
+            "pure",
+            "tomate"
+          ],
+          "kg": 0.52
+        },
+        {
+          "nombre": "Arvejas en lata",
+          "q": "arvejas",
+          "must": [
+            "arveja"
+          ],
+          "kg": 0.35
+        },
+        {
+          "nombre": "Caldo de verdura",
+          "q": "caldo de verdura",
+          "must": [
+            "caldo"
+          ],
+          "paq": 0.25
+        }
+      ],
+      "frescos": [
+        "500 g de carne picada",
+        "1 cebolla",
+        "1 morrón"
+      ]
+    },
+    {
+      "id": "fideos-manteca",
+      "nombre": "Fideos con manteca y queso",
+      "porciones": 4,
+      "pasos": "Herví los fideos, escurrí y mezclá con manteca y abundante queso rallado. Rápido y para los chicos.",
+      "ingredientes": [
+        {
+          "nombre": "Fideos spaghetti",
+          "q": "fideos spaghetti",
+          "must": [
+            "fideo"
+          ],
+          "kg": 0.5
+        },
+        {
+          "nombre": "Manteca",
+          "q": "manteca",
+          "must": [
+            "manteca"
+          ],
+          "kg": 0.05
+        },
+        {
+          "nombre": "Queso rallado",
+          "q": "queso rallado",
+          "must": [
+            "queso",
+            "rallado"
+          ],
+          "kg": 0.08
+        }
+      ],
+      "frescos": []
+    }
+  ]
+}

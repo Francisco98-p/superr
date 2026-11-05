@@ -60,6 +60,8 @@ type ListaCtx = {
   items: ItemLista[];
   tiene: (ean: string) => boolean;
   agregar: (g: ComparisonGroup) => void;
+  /** Varios de una vez (ej. los ingredientes de una receta): agrega los que no estén. */
+  agregarVarios: (gs: ComparisonGroup[]) => number;
   quitar: (ean: string) => void;
   vaciar: () => void;
   reemplazar: (items: ItemLista[]) => void;
@@ -88,6 +90,11 @@ export function ListaProvider({ query, children }: { query: string; children: Re
       agregar: (g) => {
         if (!items.some((i) => i.ean === g.ean)) cambiar([...items, itemDe(g, query || g.name)]);
       },
+      agregarVarios: (gs) => {
+        const nuevos = gs.filter((g, i) => !items.some((it) => it.ean === g.ean) && gs.findIndex((x) => x.ean === g.ean) === i);
+        if (nuevos.length) cambiar([...items, ...nuevos.map((g) => itemDe(g, g.name))]);
+        return nuevos.length;
+      },
       quitar: (ean) => cambiar(items.filter((i) => i.ean !== ean)),
       vaciar: () => cambiar([]),
       reemplazar: cambiar,
@@ -102,7 +109,7 @@ export function ListaProvider({ query, children }: { query: string; children: Re
   return <ListaContext.Provider value={value}>{children}</ListaContext.Provider>;
 }
 
-function useLista() {
+export function useLista() {
   const ctx = useContext(ListaContext);
   if (!ctx) throw new Error("useLista fuera de ListaProvider");
   return ctx;

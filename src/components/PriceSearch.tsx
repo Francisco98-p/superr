@@ -2,6 +2,8 @@
 
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CollaborateNudge from "./CollaborateNudge";
+import RecetaHoy from "./RecetaHoy";
+import type { RecetaDelDia } from "@/lib/recetas";
 import { normalizeQuery } from "@/lib/query";
 import BarcodeScanner, { ScannerHelp } from "@/components/BarcodeScanner";
 import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
@@ -357,9 +359,11 @@ function OnlinePriceNotice() {
 export default function PriceSearch({
   initialQuery,
   offers,
+  receta,
 }: {
   initialQuery: string;
   offers: Promise<OffersResponse | null>;
+  receta: Promise<RecetaDelDia | null>;
 }) {
   const hasInitialQuery = initialQuery.trim().length >= 2;
   const [input, setInput] = useState(initialQuery);
@@ -488,6 +492,9 @@ export default function PriceSearch({
 
       {!data && !loading && (
         <>
+          <Suspense fallback={null}>
+            <RecetaHoy receta={receta} />
+          </Suspense>
           <Suspense fallback={<BestOffersLoading />}>
             <BestOffers offers={offers} onSearch={runSearch} />
           </Suspense>
