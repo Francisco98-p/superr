@@ -1,4 +1,4 @@
-export type StoreId = "carrefour" | "changomas" | "laanonima" | "vea" | "atomo" | "cafeamerica" | "maxiconsumo";
+export type StoreId = "carrefour" | "changomas" | "laanonima" | "vea" | "atomo" | "cafeamerica" | "maxiconsumo" | "yaguar";
 
 export type Store = {
   id: StoreId;

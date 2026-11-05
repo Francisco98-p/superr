@@ -406,10 +406,58 @@ async function searchMaxiconsumo(query: string): Promise<ScrapedProduct[]> {
   return [];
 }
 
+// ---------- WooCommerce (Yaguar) ----------
+
+type WooProduct = {
+  name: string;
+  permalink: string;
+  is_in_stock?: boolean;
+  prices?: { price?: string; regular_price?: string; currency_minor_unit?: number };
+  images?: { thumbnail?: string; src?: string }[];
+  brands?: { name?: string }[];
+};
+
+/** Yaguar publica los nombres en mayúsculas: se pasan a "Yerba Playadito Suave 1kg". */
+function tidyName(name: string): string {
+  const text = decodeHtml(name).trim();
+  if (text !== text.toUpperCase()) return text;
+  return text.toLowerCase().replace(/(^|[\s(/-])([a-záéíóúñ])/g, (_, sep: string, ch: string) => sep + ch.toUpperCase());
+}
+
+async function searchYaguar(query: string): Promise<ScrapedProduct[]> {
+  const { site } = STORES.yaguar;
+  const params = new URLSearchParams({ search: query, per_page: String(RESULTS_PER_STORE) });
+  // La respuesta trae un BOM al principio: se saca antes de leer el JSON.
+  const text = await getText(`${site}/wp-json/wc/store/v1/products?${params}`, { Accept: "application/json" });
+  const data = JSON.parse(text.replace(/^\uFEFF/, "")) as WooProduct[];
+  const products: ScrapedProduct[] = [];
+  for (const p of Array.isArray(data) ? data : []) {
+    if (p.is_in_stock === false || !p.prices?.price) continue;
+    const unit = 10 ** (p.prices.currency_minor_unit ?? 2);
+    const price = Number(p.prices.price) / unit;
+    const regular = Number(p.prices.regular_price || 0) / unit;
+    if (!price) continue;
+    products.push(
+      withUnitPrice({
+        store: "yaguar",
+        name: tidyName(p.name),
+        brand: p.brands?.[0]?.name ? decodeHtml(p.brands[0].name) : null,
+        ean: null,
+        price,
+        regularPrice: regular > price ? regular : null,
+        image: p.images?.[0]?.thumbnail || p.images?.[0]?.src || null,
+        url: p.permalink,
+      }),
+    );
+  }
+  return products;
+}
+
 export function searchStore(store: StoreId, query: string): Promise<ScrapedProduct[]> {
   if (store === "cafeamerica") return searchCafeAmerica(query);
   if (store === "atomo") return searchAtomo(query);
   if (store === "laanonima") return searchLaAnonima(query);
   if (store === "maxiconsumo") return searchMaxiconsumo(query);
+  if (store === "yaguar") return searchYaguar(query);
   return searchVtex(store, query);
 }

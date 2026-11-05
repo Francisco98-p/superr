@@ -55,6 +55,14 @@ export const STORES: Record<StoreId, Store> = {
     site: "https://www.maxiconsumo.com/sucursal_san_juan",
     priceScope: "online",
   },
+  // Mayorista con sucursal en San Juan; la tienda online muestra un único precio (WooCommerce, sin código de barras).
+  yaguar: {
+    id: "yaguar",
+    name: "Yaguar",
+    color: "#e30613",
+    site: "https://yaguar.com.ar",
+    priceScope: "online",
+  },
 };
 
 /** Supermercados ocultos: no se buscan ni se muestran. Se dejan cargados para poder volver a activarlos. */
