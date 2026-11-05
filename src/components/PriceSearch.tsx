@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import CollaborateNudge from "./CollaborateNudge";
 import { normalizeQuery } from "@/lib/query";
 import BarcodeScanner, { ScannerHelp } from "@/components/BarcodeScanner";
 import NearestStore, { CercaniaContext, DistanciaTag } from "@/components/NearestStore";
@@ -369,6 +370,8 @@ export default function PriceSearch({
   const [cercania, setCercania] = useState<Partial<Record<StoreId, Cercana>>>({});
   const [sortMode, setSortMode] = useState<SortMode>("price");
   const abortRef = useRef<AbortController | null>(null);
+  // Búsquedas terminadas en esta visita: cada una suma para el cartel de colaborar
+  const [searches, setSearches] = useState(0);
 
   const fetchResults = useCallback((query: string) => {
     abortRef.current?.abort();
@@ -380,6 +383,7 @@ export default function PriceSearch({
       setData(outcome.data);
       setError(outcome.error);
       setLoading(false);
+      if (outcome.data) setSearches((n) => n + 1);
     });
   }, []);
 
@@ -423,6 +427,7 @@ export default function PriceSearch({
     <CercaniaContext.Provider value={cercania}>
     <ListaProvider query={data?.query ?? ""}>
     <div className="space-y-6">
+      <CollaborateNudge searches={searches} />
       <section className="rounded-xl border border-black/10 bg-white p-4 shadow-sm">
         <form
           onSubmit={(e) => {
