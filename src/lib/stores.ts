@@ -55,6 +55,14 @@ export const STORES: Record<StoreId, Store> = {
     site: "https://www.maxiconsumo.com/sucursal_san_juan",
     priceScope: "online",
   },
+  // Día: tienda online VTEX con código de barras. No vende en San Juan: se muestra su precio online como referencia.
+  dia: {
+    id: "dia",
+    name: "Día",
+    color: "#e2001a",
+    site: "https://diaonline.supermercadosdia.com.ar",
+    priceScope: "online",
+  },
   // Mayorista con sucursal en San Juan; la tienda online muestra un único precio (WooCommerce, sin código de barras).
   yaguar: {
     id: "yaguar",
