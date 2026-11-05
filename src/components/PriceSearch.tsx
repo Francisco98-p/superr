@@ -350,7 +350,7 @@ function BestOffers({ offers, onSearch }: { offers: Promise<OffersResponse | nul
 function OnlinePriceNotice() {
   return (
     <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
-      <strong>Ojo:</strong> Vea, Átomo, Maxiconsumo y Día muestran su <strong>precio online</strong>, que puede ser
+      <strong>Ojo:</strong> Vea, Átomo y Maxiconsumo muestran su <strong>precio online</strong>, que puede ser
       distinto del de la góndola. Carrefour, ChangoMás y La Anónima muestran el precio de su sucursal de San Juan.
     </p>
   );

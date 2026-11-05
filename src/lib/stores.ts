@@ -75,7 +75,7 @@ export const STORES: Record<StoreId, Store> = {
 
 /** Supermercados ocultos: no se buscan ni se muestran. Se dejan cargados para poder volver a activarlos. */
 // Yaguar: su Cloudflare bloquea (HTTP 403) las consultas desde los servidores de Vercel.
-export const HIDDEN_STORES: StoreId[] = ["cafeamerica", "yaguar"];
+export const HIDDEN_STORES: StoreId[] = ["cafeamerica", "yaguar", "dia"];
 
 export const isHiddenStore = (id: StoreId) => HIDDEN_STORES.includes(id);
 
