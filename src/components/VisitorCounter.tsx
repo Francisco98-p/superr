@@ -48,7 +48,7 @@ export default function VisitorCounter() {
       </span>
       <span>
         <span className="text-lg tabular-nums sm:text-xl">{count.toLocaleString("es-AR")}</span>{" "}
-        {count === 1 ? "sanjuanino ya usó" : "sanjuaninos ya usaron"} la web
+        {count === 1 ? "persona ya usó" : "personas ya usaron"} la web
       </span>
     </p>
   );
